@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { ServerNameMetadataKey, AvailableFieldsMetadataKey, ConverterDataMetadataKey } from './config';
+import { ServerNameMetadataKey, AvailableFieldsMetadataKey, ConverterDataMetadataKey, ConverterArrayDataMetadataKey } from './config';
 import { JsTsCustomConvert } from './interface';
 
 /**
@@ -33,12 +33,16 @@ export function JsonProperty(name?: string, customConverter?: any) {
          * Проверяем передан ли класс конвертера значения.
          */
         if (customConverter) {
-            const converter = new customConverter() as JsTsCustomConvert<any>;
-            /**
-             * Проверяем, что он реализует интерфейс кастомного конвертера
-             */
-            if (typeof (converter.serialize) === 'function' && typeof (converter.deserialize) === 'function') {
-                Reflect.defineMetadata(ConverterDataMetadataKey, converter, target, propertyKey);
+            if (customConverter instanceof Array) {
+                Reflect.defineMetadata(ConverterArrayDataMetadataKey, customConverter[0], target, propertyKey);
+            } else {
+                const converter = new customConverter() as JsTsCustomConvert<any>;
+                /**
+                 * Проверяем, что он реализует интерфейс кастомного конвертера
+                 */
+                if (typeof (converter.serialize) === 'function' && typeof (converter.deserialize) === 'function') {
+                    Reflect.defineMetadata(ConverterDataMetadataKey, converter, target, propertyKey);
+                }
             }
         }
     };

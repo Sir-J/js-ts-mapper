@@ -2,3 +2,4 @@
 export const ServerNameMetadataKey = 'serverName';
 export const AvailableFieldsMetadataKey = 'availableFields';
 export const ConverterDataMetadataKey = 'convertersData';
+export const ConverterArrayDataMetadataKey = 'convertersArrayData';

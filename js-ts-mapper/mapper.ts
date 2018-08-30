@@ -1,4 +1,4 @@
-import { AvailableFieldsMetadataKey, ConverterDataMetadataKey, ServerNameMetadataKey } from './config';
+import { AvailableFieldsMetadataKey, ConverterDataMetadataKey, ServerNameMetadataKey, ConverterArrayDataMetadataKey } from './config';
 
 /**
  * Класс реализующий маппинг
@@ -22,7 +22,11 @@ export class JsTsMapper {
                     const propType = Reflect.getMetadata('design:type', target, propName);
                     const propTypeServerFields = Reflect.getMetadata(AvailableFieldsMetadataKey, propType.prototype) as [string];
                     if (clientVal && propTypeServerFields) {
-                        serverVal = this.serialize(clientVal);
+                        if (clientVal instanceof Array) {
+                            serverVal = clientVal.map(cl => this.serialize(cl));
+                        } else {
+                            serverVal = this.serialize(clientVal);
+                        }
                     } else {
                         serverVal = clientVal;
                     }
@@ -90,26 +94,30 @@ export class JsTsMapper {
                          * Получаем конструктор класса
                          */
                         const propType = Reflect.getMetadata('design:type', target, propName);
-                        /**
-                         * Смотрим, есть ли в метаданных класса информация о свойствах
-                         */
-                        const propTypeServerFields = Reflect.getMetadata(AvailableFieldsMetadataKey, propType.prototype) as [string];
-                        if (propTypeServerFields) {
-                            /**
-                             * Да, класс использует наш декоратор, обрабатываем свойство рекурсивно
-                             */
-                            clientVal = this.deserialize(serverVal, propType);
+                        if (propType === Array) {
+                            const classType = Reflect.getMetadata(ConverterArrayDataMetadataKey, target, propName);
+                            clientVal = serverVal.map(sv => this.deserialize(sv, classType));
                         } else {
                             /**
-                             * Проверяем, есть ли кастомный конвертер, если есть, то преобразовываем значение
+                             * Смотрим, есть ли в метаданных класса информация о свойствах
                              */
-                            const converters = Reflect.getMetadata(ConverterDataMetadataKey, target);
-                            if (converters && converters[propName]) {
-                                clientVal = converters[propName].deserialize(serverVal);
+                            const propTypeServerFields = Reflect.getMetadata(AvailableFieldsMetadataKey, propType.prototype) as [string];
+                            if (propTypeServerFields) {
+                                /**
+                                 * Да, класс использует наш декоратор, обрабатываем свойство рекурсивно
+                                 */
+                                clientVal = this.deserialize(serverVal, propType);
                             } else {
-                                clientVal = serverVal;
+                                /**
+                                 * Проверяем, есть ли кастомный конвертер, если есть, то преобразовываем значение
+                                 */
+                                const converters = Reflect.getMetadata(ConverterDataMetadataKey, target);
+                                if (converters && converters[propName]) {
+                                    clientVal = converters[propName].deserialize(serverVal);
+                                } else {
+                                    clientVal = serverVal;
+                                }
                             }
-
                         }
                         /**
                          * Записываем результирующее значение
