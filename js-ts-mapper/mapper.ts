@@ -23,7 +23,7 @@ export class JsTsMapper {
                     const propTypeServerFields = Reflect.getMetadata(AvailableFieldsMetadataKey, propType.prototype) as [string];
                     if (clientVal && propTypeServerFields) {
                         if (clientVal instanceof Array) {
-                            serverVal = clientVal.map(cl => this.serialize(cl));
+                            serverVal = this.serializeArray(clientVal);
                         } else {
                             serverVal = this.serialize(clientVal);
                         }
@@ -96,7 +96,7 @@ export class JsTsMapper {
                         const propType = Reflect.getMetadata('design:type', target, propName);
                         if (propType === Array) {
                             const classType = Reflect.getMetadata(ConverterArrayDataMetadataKey, target, propName);
-                            clientVal = serverVal.map(sv => this.deserialize(sv, classType));
+                            clientVal = this.deserializeArray(serverVal, classType);
                         } else {
                             /**
                              * Смотрим, есть ли в метаданных класса информация о свойствах
@@ -117,6 +117,7 @@ export class JsTsMapper {
                                 } else {
                                     clientVal = serverVal;
                                 }
+
                             }
                         }
                         /**
