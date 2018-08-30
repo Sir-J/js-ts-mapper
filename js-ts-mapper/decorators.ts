@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import { ServerNameMetadataKey, AvailableFieldsMetadataKey, ConverterDataMetadataKey } from './config';
 import { JsTsCustomConvert } from './interface';
+import { FieldProperty } from './field-property';
 
 /**
  * Декоратор с помощью которого объявляем, свойство дял маппинга
@@ -27,19 +28,29 @@ export function JsonProperty(name?: string, customConverter?: any) {
         /**
          * Регистрируем текущее поле в метаданных
          */
-        availableFields.push(propertyKey);
-
+        let field: FieldProperty;
+        const propType = Reflect.getMetadata('design:type', target, propertyKey);
         /**
-         * Проверяем передан ли класс конвертера значения.
+         * Если массив, то смотрим какого типа этот массив
          */
-        if (customConverter) {
-            const converter = new customConverter() as JsTsCustomConvert<any>;
+        if (propType === Array) {
+            field = new FieldProperty(propertyKey, customConverter ? (customConverter[0] ? customConverter[0] : undefined) : undefined);
+        } else {
             /**
-             * Проверяем, что он реализует интерфейс кастомного конвертера
+             * Проверяем передан ли класс конвертера значения.
              */
-            if (typeof (converter.serialize) === 'function' && typeof (converter.deserialize) === 'function') {
-                Reflect.defineMetadata(ConverterDataMetadataKey, converter, target, propertyKey);
+            if (customConverter) {
+                const converter = new customConverter() as JsTsCustomConvert<any>;
+                /**
+                 * Проверяем, что он реализует интерфейс кастомного конвертера
+                 */
+                if (typeof converter.serialize === 'function' && typeof converter.deserialize === 'function') {
+                    field = new FieldProperty(propertyKey, undefined, converter);
+                }
+            } else {
+                field = new FieldProperty(propertyKey);
             }
         }
+        availableFields.push(field);
     };
 }

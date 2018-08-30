@@ -1,4 +1,5 @@
 import { AvailableFieldsMetadataKey, ConverterDataMetadataKey, ServerNameMetadataKey } from './config';
+import { FieldProperty } from './field-property';
 
 /**
  * Класс реализующий маппинг
@@ -12,23 +13,27 @@ export class JsTsMapper {
         const serverObj = {};
 
         const target = Object.getPrototypeOf(obj);
-        const availableNames = Reflect.getMetadata(AvailableFieldsMetadataKey, target) as [string];
-        availableNames.forEach(propName => {
-            const serverName = Reflect.getMetadata(ServerNameMetadataKey, target, propName);
+        const availableNames = Reflect.getMetadata(AvailableFieldsMetadataKey, target) as [FieldProperty];
+        availableNames.forEach(field => {
+            const serverName = Reflect.getMetadata(ServerNameMetadataKey, target, field.name);
             if (serverName) {
-                const clientVal = obj[propName];
+                const clientVal = obj[field.name];
                 if (clientVal) {
                     let serverVal;
-                    const propType = Reflect.getMetadata('design:type', target, propName);
-                    const propTypeServerFields = Reflect.getMetadata(AvailableFieldsMetadataKey, propType.prototype) as [string];
+                    const propType = Reflect.getMetadata('design:type', target, field.name);
+                    const propTypeServerFields = Reflect.getMetadata(AvailableFieldsMetadataKey, propType.prototype) as [FieldProperty];
                     if (clientVal && propTypeServerFields) {
-                        serverVal = this.serialize(clientVal);
+                        if (clientVal instanceof Array) {
+                            serverVal = clientVal.map(cl => this.serialize(cl));
+                        } else {
+                            serverVal = this.serialize(clientVal);
+                        }
                     } else {
                         serverVal = clientVal;
                     }
-                    const converter = Reflect.getMetadata(ConverterDataMetadataKey, target, propName);
-                    if (converter) {
-                        serverObj[serverName] = converter.serialize(serverVal);
+
+                    if (field.converter) {
+                        serverObj[serverName] = field.converter.serialize(serverVal);
                     } else {
                         serverObj[serverName] = clientVal;
                     }
@@ -56,7 +61,7 @@ export class JsTsMapper {
      * @param obj Объект, который необходимо с маппить на класс
      * @param type Тип класса, который будет заполнен значениями оз объекта
      */
-    deserialize<T>(obj: Object, type: { new(): T; }): T {
+    deserialize<T>(obj: Object, type: { new (): T }): T {
         /**
          * Создаем объект, с помощью конструктора, переданного в параметре type
          */
@@ -68,16 +73,16 @@ export class JsTsMapper {
         /**
          * Получаем из метаданных, какие декорированные свойства есть в классе
          */
-        const availableNames = Reflect.getMetadata(AvailableFieldsMetadataKey, target) as [string];
+        const availableNames = Reflect.getMetadata(AvailableFieldsMetadataKey, target) as [FieldProperty];
         if (availableNames) {
             /**
              * Обрабатываем каждое свойство
              */
-            availableNames.forEach(propName => {
+            availableNames.forEach((field: FieldProperty) => {
                 /**
                  * Получаем из метаданных имя свойства в JSON
                  */
-                const serverName = Reflect.getMetadata(ServerNameMetadataKey, target, propName);
+                const serverName = Reflect.getMetadata(ServerNameMetadataKey, target, field.name);
                 if (serverName) {
                     /**
                      * Получаем значение, переданное сервером
@@ -89,32 +94,36 @@ export class JsTsMapper {
                          * Проверяем, используются ли в классе свойства декораторы @JsonProperty
                          * Получаем конструктор класса
                          */
-                        const propType = Reflect.getMetadata('design:type', target, propName);
-                        /**
-                         * Смотрим, есть ли в метаданных класса информация о свойствах
-                         */
-                        const propTypeServerFields = Reflect.getMetadata(AvailableFieldsMetadataKey, propType.prototype) as [string];
-                        if (propTypeServerFields) {
-                            /**
-                             * Да, класс использует наш декоратор, обрабатываем свойство рекурсивно
-                             */
-                            clientVal = this.deserialize(serverVal, propType);
+                        const propType = Reflect.getMetadata('design:type', target, field.name);
+                        if (propType === Array) {
+                            clientVal = serverVal.map(sv => (field.type ? this.deserialize(sv, field.type) : sv));
                         } else {
                             /**
-                             * Проверяем, есть ли кастомный конвертер, если есть, то преобразовываем значение
+                             * Смотрим, есть ли в метаданных класса информация о свойствах
                              */
-                            const converters = Reflect.getMetadata(ConverterDataMetadataKey, target);
-                            if (converters && converters[propName]) {
-                                clientVal = converters[propName].deserialize(serverVal);
+                            const propTypeServerFields = Reflect.getMetadata(AvailableFieldsMetadataKey, propType.prototype) as [
+                                FieldProperty
+                            ];
+                            if (propTypeServerFields) {
+                                /**
+                                 * Да, класс использует наш декоратор, обрабатываем свойство рекурсивно
+                                 */
+                                clientVal = this.deserialize(serverVal, propType);
                             } else {
-                                clientVal = serverVal;
+                                /**
+                                 * Проверяем, есть ли кастомный конвертер, если есть, то преобразовываем значение
+                                 */
+                                if (field.converter) {
+                                    clientVal = field.converter.deserialize(serverVal);
+                                } else {
+                                    clientVal = serverVal;
+                                }
                             }
-
+                            /**
+                             * Записываем результирующее значение
+                             */
                         }
-                        /**
-                         * Записываем результирующее значение
-                         */
-                        clientObj[propName] = clientVal;
+                        clientObj[field.name] = clientVal;
                     }
                 }
             });
@@ -130,7 +139,7 @@ export class JsTsMapper {
      * @param array Массив объектов
      * @param type Тип класса
      */
-    deserializeArray<T>(array: Array<object>, type: { new(): T; }): Array<T> {
+    deserializeArray<T>(array: Array<object>, type: { new (): T }): Array<T> {
         return array.map(item => this.deserialize(item, type)) as Array<T>;
     }
 
@@ -138,7 +147,7 @@ export class JsTsMapper {
         throw new Error('Отсутствуют правила конвертации значений');
     }
 
-    private getTypeName<T>(type: { new(): T; }) {
+    private getTypeName<T>(type: { new (): T }) {
         return this.parseTypeName(type.toString());
     }
 
