@@ -7,7 +7,9 @@
         "compile:es2015": "npx webpack --es2015 --mode=production && npx rimraf dist/src",
         "compile:es5": "npx webpack --es5 --mode=production",
         "compile": "npm run compile:es5 && npm run compile:es2015",
+
         "test": "npx rimraf coverage && npx karma start",
+        "test:watch": "npx rimraf coverage && npx karma start --watch=true --singleRun=false",
         "clean": "npx rimraf dist",
         "copy:assets": "npx cpy -- package.json README.md CHANGELOG.md dist",
         "add:changelog": "git add --force CHANGELOG.md package.json",
