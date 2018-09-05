@@ -1,15 +1,21 @@
 {
     "name": "js-ts-mapper",
-    "version": "1.0.2",
+    "version": "1.0.1",
     "description": "Mapping json object to Typescript class",
     "main": "ts-mapper.js",
     "scripts": {
-        "test": "npm run rimraf coverage && npx karma start",
-        "clean": "npx rimraf dist",
-        "compile:es2015": "npx webpack --es2015 --mode=production",
+        "compile:es2015": "npx webpack --es2015 --mode=production && npx rimraf dist/src",
         "compile:es5": "npx webpack --es5 --mode=production",
         "compile": "npm run compile:es5 && npm run compile:es2015",
-        "preversion": "npm run test && npm run clean && npm run compile && npx cpy -- package.json README.md CHANGELOG.md dist && npx rimraf dist/src"
+        "test": "npx rimraf coverage && npx karma start",
+        "clean": "npx rimraf dist",
+        "copy:assets": "npx cpy -- package.json README.md CHANGELOG.md dist",
+        "add:changelog": "git add --force CHANGELOG.md package.json",
+        "commit:changelog": "git commit -m \"Updated CHANGELOG.md\"",
+        "push:changelog": "git push",
+        "preversion": "npm run test && npm run clean && npm run compile",
+        "version": "npx conventional-changelog -p angular -i CHANGELOG.md -s -r && npm run copy:assets && npm run add:changelog && npm run commit:changelog",
+        "postversion": "npm run push:changelog && npm publish"
     },
     "repository": {
         "type": "git",
