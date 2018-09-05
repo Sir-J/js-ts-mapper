@@ -1,4 +1,4 @@
-import { JsTsCustomConvert } from './interface';
+import { JsTsCustomConvert } from 'src/app/js-ts-mapper/interface';
 
 export class FieldProperty {
     name: string;

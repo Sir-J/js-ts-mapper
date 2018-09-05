@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "moduleResolution": "node",
+        "module": "es2015",
+        "target": "es2015",
+        "stripInternal": true,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "declaration": true,
+        "skipLibCheck": true,
+        "transpileOnly": false,
+        "allowSyntheticDefaultImports": true,
+        "lib": [
+            "dom",
+            "es2017"
+        ],
+        "types": []
+    }
+}

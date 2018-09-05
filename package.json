@@ -1,14 +1,19 @@
 {
     "name": "js-ts-mapper",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "description": "Mapping json object to Typescript class",
-    "main": "index.js",
+    "main": "ts-mapper.js",
     "scripts": {
-        "test": "npx karma start"
+        "test": "npm run rimraf coverage && npx karma start",
+        "clean": "npx rimraf dist",
+        "compile:es2015": "npx webpack --es2015 --mode=production",
+        "compile:es5": "npx webpack --es5 --mode=production",
+        "compile": "npm run compile:es5 && npm run compile:es2015",
+        "preversion": "npm run test && npm run clean && npm run compile && npx cpy -- package.json README.md CHANGELOG.md dist && npx rimraf dist/src"
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/Sir-J/js-ts-mapper.git"
+        "url": "git+https://github.com/LCGroupIT/js-ts-mapper.git"
     },
     "keywords": [
         "Mapping",
@@ -18,9 +23,9 @@
     "author": "Sergey Rogachev",
     "license": "ISC",
     "bugs": {
-        "url": "https://github.com/Sir-J/js-ts-mapper/issues"
+        "url": "https://github.com/LCGroupIT/issues"
     },
-    "homepage": "https://github.com/Sir-J/js-ts-mapper#readme",
+    "homepage": "https://github.com/LCGroupIT/issues#readme",
     "dependencies": {
         "reflect-metadata": "^0.1.12"
     },
@@ -28,6 +33,7 @@
         "@types/jasmine": "^2.8.8",
         "@types/webpack": "^4.4.11",
         "@types/webpack-env": "^1.13.6",
+        "cpy-cli": "^2.0.0",
         "es6-shim": "^0.35.3",
         "istanbul-instrumenter-loader": "^3.0.1",
         "jasmine": "^3.1.0",
@@ -42,9 +48,12 @@
         "moment": "^2.22.2",
         "ts-helpers": "^1.1.2",
         "ts-loader": "^4.4.2",
+        "ts-loader-decleration": "^0.10.4",
+        "tsconfig-paths-webpack-plugin": "^3.2.0",
         "tslint": "~5.9.1",
         "typedoc": "^0.11.1",
         "typescript": "^3.0.1",
-        "webpack": "4.16.3"
+        "webpack": "4.16.3",
+        "webpack-cli": "^3.1.0"
     }
 }

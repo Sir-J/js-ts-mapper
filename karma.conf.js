@@ -1,5 +1,6 @@
 var webpack = require('webpack');
 var path = require('path');
+var tsconfig = require('./tsconfig.spec.json');
 module.exports = function(config) {
     config.set({
         browsers: ['Chrome'],
@@ -25,9 +26,7 @@ module.exports = function(config) {
             'src/**/*.js': ['coverage']
         },
         reporters: ['spec', 'coverage'],
-        singleRun: false,
-        watch: true,
-
+        singleRun: true,
         webpack: {
             resolve: {
                 alias: {
@@ -46,7 +45,8 @@ module.exports = function(config) {
                             path.resolve(__dirname, 'tests')
                         ],
                         loader: 'ts-loader',
-                        test: /.*(?!\.d\.ts)|(\.ts)$/
+                        test: /.*(?!\.d\.ts)|(\.ts)$/,
+                        options: tsconfig
                     },
                     {
                         include: [
