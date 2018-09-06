@@ -1,8 +1,10 @@
 # js-ts-mapper
 Mapping Json object to Typescript class
 
-Installation: `npm install js-ts-mapper`.
+## Installing
+For installing of the npm-package run command: `npm install js-ts-mapper`.
 
+## Commands
 Building into ./dist: `npm run compile`.
 
 Running of tests: `npm run test`.
@@ -11,7 +13,7 @@ Publication:
 1. Update a version in the `package.json`.
 2. Run command `npm run version`.
 
-For example, we have a set of the classes.
+## Example of using
 
 ```typescript
 import { JsonProperty, JsTsCustomConvert } from 'js-ts-mapper';
