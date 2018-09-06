@@ -3,6 +3,14 @@ Mapping Json object to Typescript class
 
 Installation: `npm install js-ts-mapper`.
 
+Building into ./dist: `npm run compile`.
+
+Running of tests: `npm run test`.
+
+Publication:
+1. Update a version in the `package.json`.
+2. Run command `npm run version`.
+
 For example, we have a set of the classes.
 
 ```typescript
