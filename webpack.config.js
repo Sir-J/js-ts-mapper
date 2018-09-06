@@ -4,12 +4,12 @@ const { TSDeclerationsPlugin } = require('ts-loader-decleration');
 
 let plugins = [];
 let postfixTsConfig = 'es2015';
-let fileName = 'ts-mapper.js';
+let fileName = 'js-ts-mapper.js';
 
 const commandArgs = process.argv;
 if (~commandArgs.indexOf('--es5')) {
     postfixTsConfig = 'es5';
-    fileName = 'ts-mapper.es5.js';
+    fileName = 'js-ts-mapper.es5.js';
 } else {
     plugins.push(
         new TSDeclerationsPlugin({
@@ -20,6 +20,7 @@ if (~commandArgs.indexOf('--es5')) {
 
 module.exports = {
     entry: './src/index.ts',
+    mode: 'development',
     module: {
         rules: [{
             test: /\.ts?$/,
@@ -37,7 +38,9 @@ module.exports = {
     },
     output: {
         filename: fileName,
-        path: path.resolve(__dirname, 'dist')
+        path: path.resolve(__dirname, 'dist'),
+        library: 'js-ts-mapper',
+        libraryTarget: 'umd'
     },
     plugins: plugins
 };

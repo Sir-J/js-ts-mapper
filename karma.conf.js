@@ -28,13 +28,6 @@ module.exports = function(config) {
         reporters: ['spec', 'coverage'],
         singleRun: true,
         webpack: {
-            resolve: {
-                alias: {
-                    'ts-mapper': path.resolve(__dirname, 'src'),
-                    'test-models': path.resolve(__dirname, 'tests/models'),
-                    'ts-services': path.resolve(__dirname, 'tests/services')
-                }
-            },
             mode: 'development',
             devtool: 'inline-source-map',
             module: {

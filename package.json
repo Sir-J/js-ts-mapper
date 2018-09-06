@@ -2,12 +2,11 @@
     "name": "js-ts-mapper",
     "version": "1.0.1",
     "description": "Mapping json object to Typescript class",
-    "main": "ts-mapper.js",
+    "main": "js-ts-mapper.js",
     "scripts": {
-        "compile:es2015": "npx webpack --es2015 --mode=production && npx rimraf dist/src",
+        "compile:es2015": "npx webpack --es2015 --mode=production",
         "compile:es5": "npx webpack --es5 --mode=production",
-        "compile": "npm run compile:es5 && npm run compile:es2015",
-
+        "compile": "npm run compile:es2015 && npm run compile:es5 && npx rimraf dist/src",
         "test": "npx rimraf coverage && npx karma start",
         "test:watch": "npx rimraf coverage && npx karma start --watch=true --singleRun=false",
         "clean": "npx rimraf dist",
@@ -15,9 +14,9 @@
         "add:changelog": "git add --force CHANGELOG.md package.json",
         "commit:changelog": "git commit -m \"Updated CHANGELOG.md\"",
         "push:changelog": "git push",
-        "preversion": "npm run test && npm run clean && npm run compile",
+        "preversion": "npm run clean && npm run compile",
         "version": "npx conventional-changelog -p angular -i CHANGELOG.md -s -r && npm run copy:assets && npm run add:changelog && npm run commit:changelog",
-        "postversion": "npm run push:changelog && npm publish"
+        "postversion": "npm run push:changelog && npm publish dist"
     },
     "repository": {
         "type": "git",
@@ -37,6 +36,9 @@
     "dependencies": {
         "reflect-metadata": "^0.1.12"
     },
+    "module": "js-ts-mapper.es5.js",
+    "es2015": "js-ts-mapper.js",
+    "typings": "index.d.ts",
     "devDependencies": {
         "@types/jasmine": "^2.8.8",
         "@types/webpack": "^4.4.11",
