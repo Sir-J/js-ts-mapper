@@ -1,9 +1,8 @@
 import { JsTsMapper } from 'ts-mapper';
 import { UtilTestTools } from '../../../services/utils.srv';
 
-export function run(tools: UtilTestTools) {
+export function run(mapper: JsTsMapper) {
   it('serialize empty entities', () => {
-    let mapper: JsTsMapper = tools.mapper;
     let test_entity = {};
     let result = {};
     
@@ -15,11 +14,11 @@ export function run(tools: UtilTestTools) {
     expect(mapper.serialize(test_entity)).toBe(result);
 
     test_entity = undefined;
-    result = null;
+    result = undefined;
     expect(mapper.serialize(test_entity)).toBe(result);
 
     test_entity = '';
-    result = null;
+    result = '';
     expect(mapper.serialize(test_entity)).toBe(result);
   });
 }

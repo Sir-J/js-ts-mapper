@@ -4,9 +4,8 @@ import { Gender } from '../../../models/gender';
 import { UtilTestTools } from '../../../services/utils.srv';
 import { BankAccount } from '../../../models/bank-account';
 
-export function run(tools: UtilTestTools) {
+export function run(mapper: JsTsMapper) {
   it('serialize object with Array', () => {
-    let mapper: JsTsMapper = tools.mapper;
     let test_entity = new ClientComponent({
       id: 5,
       name: 'Test',

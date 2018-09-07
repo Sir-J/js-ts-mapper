@@ -2,12 +2,12 @@ import 'es6-shim';
 import 'reflect-metadata';
 import 'ts-helpers';
 import 'moment';
-import { UtilTestTools } from '../services/utils.srv';
+import { JsTsMapper } from '../../src/mapper';
 
 describe('Tests for JsTsMapper', () => {
-  let tools: UtilTestTools = new UtilTestTools(); 
+  let mapper: JsTsMapper = new JsTsMapper(); 
   let context = require.context('./scenarios', true, /\.ts$/);
   context.keys().forEach((path) => {
-    context(path).run(tools);
+    context(path).run(mapper);
   }); 
 });

@@ -1,12 +1,9 @@
 import { JsTsMapper } from 'ts-mapper';
-import { ClientComponent } from '../../../models/client-component';
-import { Gender } from '../../../models/gender';
-import { UtilTestTools } from '../../../services/utils.srv';
 import { BankAccount } from '../../../models/bank-account';
+import { UtilTestTools } from '../../../services/utils.srv';
 
-export function run(tools: UtilTestTools) {
+export function run(mapper: JsTsMapper) {
   it('serialize Array of objects', () => {
-    let mapper: JsTsMapper = tools.mapper;
     let test_entity = [
       new BankAccount({
         id: 125,
@@ -40,9 +37,10 @@ export function run(tools: UtilTestTools) {
         HasProlong: false
       }
     ];
-    expect(JSON.stringify(mapper.serializeArray(test_entity))).toBe(JSON.stringify(result));
-    expect(JSON.stringify(mapper.serializeArray([]))).toBe(JSON.stringify([]));
+    UtilTestTools.expectEqual(mapper.serializeArray(test_entity), result);
+    UtilTestTools.expectEqual(mapper.serializeArray([]), []);
+    UtilTestTools.expectEqual(mapper.serializeArray([1,2,3,4,5]), [1,2,3,4,5]);
     expect(mapper.serializeArray(null)).toBe(null);
-    expect(mapper.serializeArray(undefined)).toBe(null);
+    expect(mapper.serializeArray(undefined)).toBe(undefined);    
   });
 }

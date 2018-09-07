@@ -27,7 +27,14 @@
         "Json toTypescript",
         "Json to class"
     ],
-    "author": "Sergey Rogachev",
+    "contributors": [{
+            "name": "Sergey Rogachev"
+        },
+        {
+            "name": "Alexey Sorokin",
+            "email": "a.sorokin@lcgroup.su"
+        }
+    ],
     "license": "ISC",
     "bugs": {
         "url": "https://github.com/LCGroupIT/issues"

@@ -32,4 +32,10 @@ export class ClientComponent {
 
     @JsonProperty()
     Address?: Address;
+
+    @JsonProperty('Comments')
+    comments?: Array<string>; 
+    
+    @JsonProperty('RoleIds', [Number])
+    roleIds?: Array<Number>;
 }

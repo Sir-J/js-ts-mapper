@@ -1,12 +1,9 @@
 import { JsTsMapper } from 'ts-mapper';
-import { ClientComponent } from '../../../models/client-component';
-import { Gender } from '../../../models/gender';
 import { UtilTestTools } from '../../../services/utils.srv';
 import { BankAccount } from '../../../models/bank-account';
 
-export function run(tools: UtilTestTools) {
+export function run(mapper: JsTsMapper) {
   it('deserialize Array of objects', () => {
-    let mapper: JsTsMapper = tools.mapper;
     let test_entity = [
       {
         id: 125,
@@ -46,5 +43,7 @@ export function run(tools: UtilTestTools) {
     expect(out instanceof Array).toBeTruthy();
     expect(out[0] instanceof BankAccount).toBeTruthy();
     expect(out[0].created instanceof Date).toBeTruthy();
+    expect(mapper.deserializeArray(null, BankAccount)).toBe(null);
+    expect(mapper.deserializeArray(undefined, BankAccount)).toBe(undefined);
   });
 }

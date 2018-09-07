@@ -4,9 +4,8 @@ import { ClientComponent } from '../../../models/client-component';
 import { Gender } from '../../../models/gender';
 import { Address } from '../../../models/address';
 
-export function run(tools: UtilTestTools) {
+export function run(mapper: JsTsMapper) {
   it('serialize component with inner component', () => {
-    let mapper: JsTsMapper = tools.mapper;
     let test_entity = new ClientComponent({
       id: 5,
       name: 'Test',

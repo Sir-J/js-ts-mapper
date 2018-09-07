@@ -3,9 +3,8 @@ import { ClientComponent } from '../../../models/client-component';
 import { Gender } from '../../../models/gender';
 import { UtilTestTools } from '../../../services/utils.srv';
 
-export function run(tools: UtilTestTools) {
+export function run(mapper: JsTsMapper) {
   it('deserialize with converter', () => {
-    let mapper: JsTsMapper = tools.mapper;
     let test_entity = {
       gender: Gender.Female,
       card: false,
