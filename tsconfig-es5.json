@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "moduleResolution": "node",  
+        "target": "es5",
+        "stripInternal": true,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "baseUrl": "./",
+        "declaration": true,
+        "skipLibCheck": true,
+        "allowSyntheticDefaultImports": true,
+        "lib": [
+            "dom",
+            "es2017"
+        ]
+    }
+}

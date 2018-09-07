@@ -1,21 +1,21 @@
 {
-    "compileOnSave": true,
     "compilerOptions": {
         "moduleResolution": "node",
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "sourceMap": true,
-        "declaration": true,
+        "declaration": false,
         "baseUrl": "./",
+        "outDir": "./dist",
         "lib": [
             "dom",
             "es2017"
         ],        
         "typeRoots": [ 
             "node_modules/@types"
-        ]
-    },
-    "include": [
-        "src/**/*"
-    ]
+        ],
+        "paths": { 
+            "ts-mapper": ["src/index"]
+        }
+    } 
 }

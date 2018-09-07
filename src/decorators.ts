@@ -1,6 +1,6 @@
 import 'reflect-metadata';
-import { ServerNameMetadataKey, AvailableFieldsMetadataKey, ConverterDataMetadataKey } from './config';
-import { JsTsCustomConvert } from './interface';
+import { ServerNameMetadataKey, AvailableFieldsMetadataKey } from './config';
+import { JsTsCustomConvert, BaseJsTsCustomConvert } from './interface';
 import { FieldProperty } from './field-property';
 
 /**
@@ -8,7 +8,7 @@ import { FieldProperty } from './field-property';
  * @param name Имя свойства в объекте
  * @param customConverter Конвертер, специфичным образом прообразующее значение
  */
-export function JsonProperty(name?: string, customConverter?: any) {
+export function JsonProperty(name?: string, customConverter?:  { new (): BaseJsTsCustomConvert } | [{ new (...arg): any }]) {
     return (target: Object, propertyKey: string) => {
         /**
          * Сохраняем в метаданных переданный name, либо название самого свойства, если параметр не задан
@@ -39,18 +39,22 @@ export function JsonProperty(name?: string, customConverter?: any) {
             /**
              * Проверяем передан ли класс конвертера значения.
              */
-            if (customConverter) {
+            if (customConverter && typeof customConverter === 'function') {
                 const converter = new customConverter() as JsTsCustomConvert<any>;
                 /**
                  * Проверяем, что он реализует интерфейс кастомного конвертера
                  */
                 if (typeof converter.serialize === 'function' && typeof converter.deserialize === 'function') {
                     field = new FieldProperty(propertyKey, undefined, converter);
+                } else  {
+                    field = new FieldProperty(propertyKey, customConverter);
                 }
             } else {
                 field = new FieldProperty(propertyKey);
             }
         }
-        availableFields.push(field);
+        if (field) {
+            availableFields.push(field);
+        }
     };
 }
