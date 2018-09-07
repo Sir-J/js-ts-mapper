@@ -12,7 +12,7 @@ export class JsTsMapper {
     serialize<T>(obj: T): Object {
         const serverObj = {};
 
-        if (!obj || isPrimitive(obj)) {
+        if (isPrimitive(obj)) {
             return <T>obj;
         }
 
@@ -59,7 +59,7 @@ export class JsTsMapper {
      * @param array
      */
     serializeArray<T>(array: Array<T>): Array<Object> {
-        if (!array || isPrimitive(array)) {
+        if (isPrimitive(array)) {
             return <any>array;
         }
         return array.map((item: T) => this.serialize(item)) as Array<Object>;
@@ -72,7 +72,7 @@ export class JsTsMapper {
      */
     deserialize<T>(obj: Object, type: { new (...args): T }): T {
         
-        if (!obj || isPrimitive(obj)) {
+        if (isPrimitive(obj)) {
             return <T>obj;
         }
 
@@ -155,7 +155,7 @@ export class JsTsMapper {
      * @param type Тип класса
      */
     deserializeArray<T>(array: Array<object>, field: FieldProperty | {new(...args):any}): Array<T> {        
-        if (!array || isPrimitive(array)) {
+        if (isPrimitive(array)) {
             return <any>array;
         }
         let type: { new(...args): any };

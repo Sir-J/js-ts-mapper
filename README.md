@@ -41,7 +41,6 @@ export class ClientComponent {
     @JsonProperty('BankAccounts', [BankAccount])
     bankAccounts?: Array<BankAccount>;
 
-    // The case of using with Array
     @JsonProperty("Address")
     address?: Address;
 }
