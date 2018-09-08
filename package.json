@@ -1,31 +1,76 @@
 {
-  "name": "js-ts-mapper",
-  "version": "1.0.0",
-  "description": "Mapping json object to Typescript class",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Sir-J/js-ts-mapper.git"
-  },
-  "keywords": [
-    "Mapping",
-    "Json toTypescript",
-    "Json to class"
-  ],
-  "author": "Sergey Rogachev",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Sir-J/js-ts-mapper/issues"
-  },
-  "homepage": "https://github.com/Sir-J/js-ts-mapper#readme",
-  "dependencies": {
-    "reflect-metadata": "^0.1.12"
-  },
-  "devDependencies": {
-    "typescript": "~2.7.2",
-    "tslint": "~5.9.1"
-  }
+    "name": "js-ts-mapper",
+    "version": "1.0.1",
+    "description": "Mapping json object to Typescript class",
+    "main": "js-ts-mapper.js",
+    "scripts": {
+        "compile:es2015": "npx webpack --es2015 --mode=production",
+        "compile:es5": "npx webpack --es5 --mode=production",
+        "compile": "npm run compile:es2015 && npm run compile:es5 && npx rimraf dist/src",
+        "test": "npx rimraf coverage && npx karma start",
+        "test:watch": "npx rimraf coverage && npx karma start --watch=true --singleRun=false",
+        "clean": "npx rimraf dist",
+        "copy:assets": "npx cpy -- package.json README.md CHANGELOG.md dist",
+        "add:changelog": "git add --force CHANGELOG.md package.json",
+        "commit:changelog": "git commit -m \"Updated CHANGELOG.md\"",
+        "push:changelog": "git push",
+        "preversion": "npm run clean && npm run compile",
+        "version": "npx conventional-changelog -p angular -i CHANGELOG.md -s -r && npm run copy:assets && npm run add:changelog && npm run commit:changelog",
+        "postversion": "npm run push:changelog && npm publish dist"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/LCGroupIT/js-ts-mapper.git"
+    },
+    "keywords": [
+        "Mapping",
+        "Json toTypescript",
+        "Json to class"
+    ],
+    "contributors": [{
+            "name": "Sergey Rogachev"
+        },
+        {
+            "name": "Alexey Sorokin",
+            "email": "a.sorokin@lcgroup.su"
+        }
+    ],
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/LCGroupIT/issues"
+    },
+    "homepage": "https://github.com/LCGroupIT/issues#readme",
+    "dependencies": {
+        "reflect-metadata": "^0.1.12"
+    },
+    "module": "js-ts-mapper.es5.js",
+    "es2015": "js-ts-mapper.js",
+    "typings": "index.d.ts",
+    "devDependencies": {
+        "@types/jasmine": "^2.8.8",
+        "@types/webpack": "^4.4.11",
+        "@types/webpack-env": "^1.13.6",
+        "cpy-cli": "^2.0.0",
+        "es6-shim": "^0.35.3",
+        "istanbul-instrumenter-loader": "^3.0.1",
+        "jasmine": "^3.1.0",
+        "jasmine-core": "^3.1.0",
+        "karma": "^2.0.5",
+        "karma-chrome-launcher": "^2.2.0",
+        "karma-coverage": "^1.1.2",
+        "karma-jasmine": "^1.1.2",
+        "karma-sourcemap-loader": "^0.3.7",
+        "karma-spec-reporter": "^0.0.32",
+        "karma-webpack": "^3.0.0",
+        "moment": "^2.22.2",
+        "ts-helpers": "^1.1.2",
+        "ts-loader": "^4.4.2",
+        "ts-loader-decleration": "^0.10.4",
+        "tsconfig-paths-webpack-plugin": "^3.2.0",
+        "tslint": "~5.9.1",
+        "typedoc": "^0.11.1",
+        "typescript": "^3.0.1",
+        "webpack": "4.16.3",
+        "webpack-cli": "^3.1.0"
+    }
 }
