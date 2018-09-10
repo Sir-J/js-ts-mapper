@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { ServerNameMetadataKey, AvailableFieldsMetadataKey } from './config';
+import { ServerNameMetadataKey, AvailableFieldsMetadataKey, IgnoreUndecoratedPropertyKey } from './config';
 import { JsTsCustomConvert, BaseJsTsCustomConvert } from './interface';
 import { FieldProperty } from './field-property';
 
@@ -56,5 +56,11 @@ export function JsonProperty(name?: string, customConverter?:  { new (): BaseJsT
         if (field) {
             availableFields.push(field);
         }
+    };
+}
+
+export function SerializeUndecorated(enabled: boolean = true) {
+    return (target: Object) => {     
+        Reflect.defineMetadata(IgnoreUndecoratedPropertyKey, !enabled, target);
     };
 }
