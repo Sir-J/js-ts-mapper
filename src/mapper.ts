@@ -1,6 +1,7 @@
-import { AvailableFieldsMetadataKey, ServerNameMetadataKey } from './config';
+import { AvailableFieldsMetadataKey, ServerNameMetadataKey, IgnoreUndecoratedPropertyKey } from './config';
 import { FieldProperty } from './field-property';
 
+const ignoreUndecoratedPropertyDefault = true;
 /**
  * Класс реализующий маппинг
  */
@@ -15,12 +16,22 @@ export class JsTsMapper {
         if (isPrimitive(obj)) {
             return <T>obj;
         }
-
+        
         const target = Object.getPrototypeOf(obj);
-        const availableNames = Reflect.getMetadata(AvailableFieldsMetadataKey, target) as [FieldProperty];
-        if (!availableNames) {
-            return serverObj;
+        const availableNames = Reflect.getMetadata(AvailableFieldsMetadataKey, target) as [FieldProperty];        
+        let ignoreUndecoratedProp = Reflect.getMetadata(IgnoreUndecoratedPropertyKey, target.constructor);
+        if (typeof ignoreUndecoratedProp !== 'boolean') {            
+            ignoreUndecoratedProp = ignoreUndecoratedPropertyDefault;
         }
+        
+        if (ignoreUndecoratedProp === false) {
+            Object.assign<Object, T>(serverObj, obj);
+        }
+
+        if (!availableNames) {
+            return obj;
+        }
+
         availableNames.forEach(field => {
             const serverName = Reflect.getMetadata(ServerNameMetadataKey, target, field.name);
             if (!serverName) {
@@ -48,6 +59,11 @@ export class JsTsMapper {
                         serverObj[serverName] = serverVal;
                     }
                 }
+
+                if (field.name !== serverName && ignoreUndecoratedProp === false) {
+                    delete serverObj[field.name];
+                }
+
             }
         });
 
