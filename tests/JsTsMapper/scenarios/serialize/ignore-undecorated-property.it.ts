@@ -9,11 +9,11 @@ export function run(mapper: JsTsMapper) {
       firstName: 'Test',
       lastName: 'Test',
       middleName: 'Test',
-      selected: true
+      selected: true,
+      checked: false
     });
 
     let result: any = {
-      selected: true,
       Id: 256,
       FirstName: 'Test',
       LastName: 'Test',
@@ -28,9 +28,12 @@ export function run(mapper: JsTsMapper) {
       firstName: 'Test',
       lastName: 'Test',
       middleName: 'Test',
-      selected: true
+      selected: true,
+      checked: false
     });
     result = {
+      selected: true,
+      checked: false,
       Id: 256,
       FirstName: 'Test',
       LastName: 'Test',

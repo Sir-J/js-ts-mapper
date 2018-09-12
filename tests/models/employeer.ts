@@ -1,6 +1,6 @@
-import { SerializeUndecorated, JsonProperty } from "../../src/decorators";
+import { SerializeOnlyDecorated, JsonProperty } from "../../src/decorators";
 
-@SerializeUndecorated()
+@SerializeOnlyDecorated()
 export class Employeer {
     constructor(o) {
         Object.assign(this, o);
