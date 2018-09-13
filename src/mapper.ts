@@ -1,7 +1,7 @@
 import { AvailableFieldsMetadataKey, ServerNameMetadataKey, IgnoreUndecoratedPropertyKey } from './config';
 import { FieldProperty } from './field-property';
 
-const ignoreUndecoratedPropertyDefault = true;
+const ignoreUndecoratedPropertyDefault = false;
 /**
  * Класс реализующий маппинг
  */
@@ -20,7 +20,7 @@ export class JsTsMapper {
         const target = Object.getPrototypeOf(obj);
         const availableNames = Reflect.getMetadata(AvailableFieldsMetadataKey, target) as [FieldProperty];        
         let ignoreUndecoratedProp = Reflect.getMetadata(IgnoreUndecoratedPropertyKey, target.constructor);
-        if (typeof ignoreUndecoratedProp !== 'boolean') {            
+        if (typeof ignoreUndecoratedProp !== 'boolean') {    
             ignoreUndecoratedProp = ignoreUndecoratedPropertyDefault;
         }
         
@@ -184,6 +184,11 @@ export class JsTsMapper {
     }
 }
 
-function isPrimitive(value) {
+/**
+ * Функция на проверку на примитив
+ * @param value Значение любого типа
+ * @returns {boolean} 
+ */
+function isPrimitive(value: any) {
     return (value !== Object(value));
 }

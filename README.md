@@ -130,14 +130,14 @@ console.log(deserializedClient);
 */
 ```
 
-By default all undecorated properties (which don't have a decorator `@JsonProperty()`) ignore during the serialization into json-object.
-Decorator `@SerializeUndecorated` can corrects this case and cancel the ignoring such properties.
+By default all undecorated properties (which don't have a decorator `@JsonProperty()`) pass through the serialization.
+Decorator `@SerializeOnlyDecorated` can corrects this case and switch on the ignoring such properties.
 
 ```typescript
 
 import { SerializeUndecorated, JsonProperty, JsTsMapper } from "js-ts-mapper";
 
-@SerializeUndecorated()
+@SerializeOnlyDecorated()
 export class Employeer {
     constructor(o) {
         Object.assign(this, o);
@@ -170,7 +170,6 @@ let out = mapper.serialize(test_entity);
 /*
     returns
     {
-        selected: true,
         Id: 256,
         FirstName: 'Test',
         LastName: 'Test',

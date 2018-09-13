@@ -59,8 +59,14 @@ export function JsonProperty(name?: string, customConverter?:  { new (): BaseJsT
     };
 }
 
-export function SerializeUndecorated(enabled: boolean = true) {
+/**
+* Декоратор для сериализации только декорированных свойств
+*/
+export function SerializeOnlyDecorated() {
     return (target: Object) => {     
-        Reflect.defineMetadata(IgnoreUndecoratedPropertyKey, !enabled, target);
+        /**
+        * Отправляем в метаданные флаг о том, что сериализации в контексте класса подвергаются только декарированные свойства
+        */
+        Reflect.defineMetadata(IgnoreUndecoratedPropertyKey, true, target);
     };
 }

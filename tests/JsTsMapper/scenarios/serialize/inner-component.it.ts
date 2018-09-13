@@ -15,16 +15,16 @@ export function run(mapper: JsTsMapper) {
     });
 
     let result = {
+      Address: {
+        Value: 'Пресненская набережная, 12'
+      },
       Id: 5,
       Name: 'Test',
       Gender: 1,
       DateBirth: '2018-11-05T00:00:00',
-      Card: false,
-      Address: {
-        Value: 'Пресненская набережная, 12'
-      }
+      Card: false
     };
-    
+
     let out = mapper.serialize(test_entity);
     UtilTestTools.expectEqual(out, result);
   });
