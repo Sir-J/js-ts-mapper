@@ -172,7 +172,6 @@ export class JsTsMapper {
             }
             clientObj[field.name] = clientVal;
         });
-        // console.log(clientObj);
         return clientObj;
     }
 
@@ -208,7 +207,7 @@ function isPrimitive(value: any) {
  * Разматывает объект по прототипам и получает доступные свойства
  * @param target Объект, свойства которого получаем
  * @param dest Массив, куда будут помещены доступные свойства.
- * @returns {boolean}
+ * @returns {Array}
  */
 function setAvailableFieldsMetadata(target: any, dest: Array<any> = []) { 
     if (!target) {
