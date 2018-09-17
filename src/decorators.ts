@@ -17,13 +17,14 @@ export function JsonProperty(name?: string, customConverter?:  { new (): BaseJsT
         /**
          * Проверяем, не определены ли уже availableFields другим экземпляром декоратора
          */
-        let availableFields = Reflect.getMetadata(AvailableFieldsMetadataKey, target);
+        let availableFields = Reflect.getMetadata(AvailableFieldsMetadataKey, target, `$$${target.constructor.name}`);
         if (!availableFields) {
             availableFields = [];
+
             /**
              * Не передаем 4-й параметр(propertyKey) в defineMetadata, т.к. метаданные общие для всех полей
              */
-            Reflect.defineMetadata(AvailableFieldsMetadataKey, availableFields, target);
+            Reflect.defineMetadata(AvailableFieldsMetadataKey, availableFields, target, `$$${target.constructor.name}`);
         }
         /**
          * Регистрируем текущее поле в метаданных

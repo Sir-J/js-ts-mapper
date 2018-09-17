@@ -11,7 +11,7 @@ export function run(mapper: JsTsMapper) {
     let result: any = {};
     
     let out: ClientComponent = mapper.deserialize(result, ClientComponent);
-    UtilTestTools.expectEqual(out, test_entity);
+    UtilTestTools.expectEqual(out, {});
 
     test_entity = null;
     result = null;

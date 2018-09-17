@@ -9,5 +9,5 @@ describe('Tests for JsTsMapper', () => {
   let context = require.context('./scenarios', true, /\.ts$/);
   context.keys().forEach((path) => {
     context(path).run(mapper);
-  }); 
+  });
 });
