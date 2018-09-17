@@ -133,9 +133,6 @@ export class JsTsMapper {
              * Получаем значение, переданное сервером
              */
             const serverVal = obj[serverName];
-            if (!serverVal) {
-                return;
-            }
             let clientVal = null;
             /**
              * Проверяем, используются ли в классе свойства декораторы @JsonProperty

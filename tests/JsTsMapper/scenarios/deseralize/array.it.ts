@@ -22,7 +22,8 @@ export function run(mapper: JsTsMapper) {
           id: 2563,
           number: '8545596585',
           created: '2016-11-11T21:00:00.000Z',
-          ownerId: 2584
+          ownerId: 2584,
+          hasProlong: false
         }
       ]
     };
