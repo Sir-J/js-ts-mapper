@@ -1,6 +1,6 @@
 {
     "name": "js-ts-mapper",
-    "version": "1.0.1",
+    "version": "1.0.0",
     "description": "Mapping json object to Typescript class",
     "main": "js-ts-mapper.js",
     "scripts": {
