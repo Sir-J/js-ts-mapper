@@ -18,7 +18,10 @@ export class JsTsMapper {
         }
 
         const target = Object.getPrototypeOf(obj);
-        const availableNames = Reflect.getMetadata(AvailableFieldsMetadataKey, target, `$$${target.constructor.name}`) as [FieldProperty];
+        let availableNames: Array<FieldProperty> = Reflect.getMetadata(AvailableFieldsMetadataKey, target, `$$${target.constructor.name}`) as [FieldProperty];
+        if (availableNames instanceof Array) {
+            availableNames = availableNames.slice();
+        }
         let ignoreUndecoratedProp = Reflect.getMetadata(IgnoreUndecoratedPropertyKey, target.constructor);
         if (typeof ignoreUndecoratedProp !== 'boolean') {
             ignoreUndecoratedProp = ignoreUndecoratedPropertyDefault;
@@ -108,7 +111,12 @@ export class JsTsMapper {
         /**
          * Получаем из метаданных, какие декорированные свойства есть в классе
          */
-        const availableNames = Reflect.getMetadata(AvailableFieldsMetadataKey, target, `$$${target.constructor.name}`) as [FieldProperty];
+        
+        let availableNames: Array<FieldProperty> = Reflect.getMetadata(AvailableFieldsMetadataKey, target, `$$${target.constructor.name}`) as [FieldProperty];
+        if (availableNames instanceof Array) {
+            availableNames = availableNames.slice();
+        }
+        
         if (!availableNames) {
             return clientObj;
         }
