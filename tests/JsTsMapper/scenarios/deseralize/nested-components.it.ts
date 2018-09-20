@@ -107,7 +107,7 @@ export function run(mapper: JsTsMapper) {
     //проверка на дублирование свойств при повторной десериализации  
     let out3 = mapper.deserialize(test_entity, ComponentVariant1);
     let prototype = Object.getPrototypeOf(Object.getPrototypeOf(out3));
-    let availableFields:Array<FieldProperty> = Reflect.getMetadata(AvailableFieldsMetadataKey, prototype, `$$${prototype.constructor.name}`) as [FieldProperty];
+    let availableFields:Array<FieldProperty> = Reflect.getMetadata(AvailableFieldsMetadataKey, prototype, Reflect.get(prototype.constructor, '$$hash')) as [FieldProperty];
     expect(availableFields.length === 5).toBeTruthy();
 
     expect(out instanceof ComponentVariant1).toBeTruthy();

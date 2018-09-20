@@ -13,18 +13,22 @@ export function JsonProperty(name?: string, customConverter?:  { new (): BaseJsT
         /**
          * Сохраняем в метаданных переданный name, либо название самого свойства, если параметр не задан
          */
-        Reflect.defineMetadata(ServerNameMetadataKey, name || propertyKey, target, propertyKey);
+        Reflect.defineMetadata(ServerNameMetadataKey, name || propertyKey, target, propertyKey);        
+        if(!target.constructor.hasOwnProperty('$$hash')) {
+            Reflect.defineProperty(target.constructor, '$$hash', {value: Symbol(target.constructor.name) });            
+        }
+        let hash = getHash(target.constructor);
         /**
          * Проверяем, не определены ли уже availableFields другим экземпляром декоратора
          */
-        let availableFields = Reflect.getMetadata(AvailableFieldsMetadataKey, target, `$$${target.constructor.name}`);
+        let availableFields = Reflect.getMetadata(AvailableFieldsMetadataKey, target, hash);
         if (!availableFields) {
             availableFields = [];
 
             /**
              * Не передаем 4-й параметр(propertyKey) в defineMetadata, т.к. метаданные общие для всех полей
              */
-            Reflect.defineMetadata(AvailableFieldsMetadataKey, availableFields, target, `$$${target.constructor.name}`);
+            Reflect.defineMetadata(AvailableFieldsMetadataKey, availableFields, target, hash);
         }
         /**
          * Регистрируем текущее поле в метаданных
@@ -70,4 +74,11 @@ export function SerializeOnlyDecorated() {
         */
         Reflect.defineMetadata(IgnoreUndecoratedPropertyKey, true, target);
     };
+}
+
+export function getHash(entity: any) {
+    if (!entity) {
+        return entity;
+    }
+    return Reflect.get(entity, '$$hash');
 }
