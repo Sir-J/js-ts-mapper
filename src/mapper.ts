@@ -228,6 +228,9 @@ function setAvailableFieldsMetadata(target: any, dest: Array<any> = []) {
         return dest;
     }
     while (proto.constructor && proto.constructor.name !== 'Object') {    
+        /**
+         * Извлекаем ключ конструктора у каждого из прототипов он уникален
+         */
         let hash = getHash(proto.constructor);
         dest.push(
             ...(Reflect.getMetadata(AvailableFieldsMetadataKey, proto, hash) as [FieldProperty])

@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { ServerNameMetadataKey, AvailableFieldsMetadataKey, IgnoreUndecoratedPropertyKey } from './config';
+import { ServerNameMetadataKey, AvailableFieldsMetadataKey, IgnoreUndecoratedPropertyKey, HashPropertyKey } from './config';
 import { JsTsCustomConvert, BaseJsTsCustomConvert } from './interface';
 import { FieldProperty } from './field-property';
 
@@ -13,10 +13,17 @@ export function JsonProperty(name?: string, customConverter?:  { new (): BaseJsT
         /**
          * Сохраняем в метаданных переданный name, либо название самого свойства, если параметр не задан
          */
-        Reflect.defineMetadata(ServerNameMetadataKey, name || propertyKey, target, propertyKey);        
-        if(!target.constructor.hasOwnProperty('$$hash')) {
-            Reflect.defineProperty(target.constructor, '$$hash', {value: Symbol(target.constructor.name) });            
+        Reflect.defineMetadata(ServerNameMetadataKey, name || propertyKey, target, propertyKey);  
+        
+        /**
+         * Создаем уникальный ключ для конструктора при помощи структуры Symbol
+         * У класса, родителя, прародителя (и т. д.) они будут разными и уникальными, 
+         * чтобы в дальнейшем можно было распутать цепочку прототипов и извлечь метаданные каждого из них в отдельности.
+         */
+        if (!target.constructor.hasOwnProperty(HashPropertyKey)) {
+            Reflect.defineProperty(target.constructor, HashPropertyKey, { value: Symbol(target.constructor.name) });            
         }
+        // получаем ключ конструктора
         let hash = getHash(target.constructor);
         /**
          * Проверяем, не определены ли уже availableFields другим экземпляром декоратора
@@ -76,9 +83,9 @@ export function SerializeOnlyDecorated() {
     };
 }
 
+/**
+* Извлекает значение уникального свойства типа по ключу { HashPropertyKey }
+*/
 export function getHash(entity: any) {
-    if (!entity) {
-        return entity;
-    }
-    return Reflect.get(entity, '$$hash');
+    return Reflect.get(entity, HashPropertyKey);
 }
