@@ -22,8 +22,13 @@ export class JsTsMapper {
         let hash = getHash(target.constructor);
         let availableNames: Array<FieldProperty> = Reflect.getMetadata(AvailableFieldsMetadataKey, target, hash) as [FieldProperty];
         if (availableNames instanceof Array) {
+            /** Клонируем массив из метаданных, так как он далее будет меняться. В самих метаданных он должен оставаться неизменным. */
             availableNames = availableNames.slice();
         }
+
+        /**
+         *  Извлекаем флаг, нужно ли игнорировать недекорированные поля
+         */
         let ignoreUndecoratedProp = Reflect.getMetadata(IgnoreUndecoratedPropertyKey, target.constructor);
         if (typeof ignoreUndecoratedProp !== 'boolean') {
             ignoreUndecoratedProp = ignoreUndecoratedPropertyDefault;
@@ -72,7 +77,9 @@ export class JsTsMapper {
                         serverObj[serverName] = serverVal;
                     }
                 }
-
+                /** 
+                 * Вычищаем из выходного объекта обработанные поля
+                 */
                 if (field.name !== serverName && ignoreUndecoratedProp === false) {
                     delete serverObj[field.name];
                 }
@@ -107,6 +114,7 @@ export class JsTsMapper {
          * Создаем объект, с помощью конструктора, переданного в параметре type
          */
         const clientObj: T = new type();
+        
         /**
          * Получаем контейнер с метаданными
          */
@@ -117,7 +125,20 @@ export class JsTsMapper {
         let hash = getHash(target.constructor);
         let availableNames: Array<FieldProperty> = Reflect.getMetadata(AvailableFieldsMetadataKey, target, hash) as [FieldProperty];
         if (availableNames instanceof Array) {
+            /** Клонируем массив из метаданных, так как он далее будет меняться. В самих метаданных он должен оставаться неизменным. */
             availableNames = availableNames.slice();
+        }
+
+        /**
+         *  Извлекаем флаг, нужно ли игнорировать недекорированные поля
+         */
+        let ignoreUndecoratedProp = Reflect.getMetadata(IgnoreUndecoratedPropertyKey, target.constructor);
+        if (typeof ignoreUndecoratedProp !== 'boolean') {
+            ignoreUndecoratedProp = ignoreUndecoratedPropertyDefault;
+        }
+
+        if (ignoreUndecoratedProp === false) {
+            Object.assign<T, Object>(clientObj, obj);
         }
 
         if (!availableNames) {
@@ -179,6 +200,13 @@ export class JsTsMapper {
                 /**
                  * Записываем результирующее значение
                  */
+            }
+
+            /** 
+             * Вычищаем из выходного объекта обработанные поля
+             */
+            if (field.name !== serverName && ignoreUndecoratedProp === false) {
+                delete clientObj[serverName];
             }
             clientObj[field.name] = clientVal;
         });

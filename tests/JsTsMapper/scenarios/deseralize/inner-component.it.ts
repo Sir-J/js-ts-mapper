@@ -8,10 +8,10 @@ export function run(mapper: JsTsMapper) {
     let test_entity = {
       gender: Gender.Female,
       card: false,
+      Address: { value: 'Пресненская набережная, 10' },
       id: 5,
       name: 'Test',
-      dateBirth: '2018-11-04T21:00:00.000Z',
-      Address: { value: 'Пресненская набережная, 10' }
+      dateBirth: '2018-11-04T21:00:00.000Z'
     };
 
     let result = {
