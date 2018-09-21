@@ -7,6 +7,7 @@ export function run(mapper: JsTsMapper) {
     let test_entity = {
       gender: 1,
       card: false,
+      selected: true,
       id: 5,
       name: 'Test',
       dateBirth: '2018-11-04T21:00:00.000Z',
@@ -34,6 +35,7 @@ export function run(mapper: JsTsMapper) {
       Gender: 1,
       DateBirth: '2018-11-05T00:00:00',
       Card: false,
+      selected: true,
       BankAccount: [
         {
           Id: 125,

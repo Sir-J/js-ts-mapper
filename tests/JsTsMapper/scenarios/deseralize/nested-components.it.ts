@@ -1,14 +1,21 @@
 import { JsTsMapper } from 'ts-mapper';
-import { ComponentVariant1, ComponentVariant1ArrayItem, ComponentVariant2, ComponentVariant2ArrayItem } from '../../../models/hierachy-components';
+import {
+  ComponentVariant1,
+  ComponentVariant1ArrayItem,
+  ComponentVariant2,
+  ComponentVariant2ArrayItem
+} from '../../../models/hierachy-components';
 import { UtilTestTools } from '../../../services/utils.srv';
 import { FieldProperty } from '../../../../src/field-property';
-import { AvailableFieldsMetadataKey, HashPropertyKey } from '../../../../src/config';
+import {
+  AvailableFieldsMetadataKey,
+  HashPropertyKey
+} from '../../../../src/config';
 
 export function run(mapper: JsTsMapper) {
   it('deserialize components with nesting of the class', () => {
     //Тестовый объект
     let test_entity = {
-      ComponentVariant1Property: 'value',
       // Свойста 3 уровня
       ComponentLevel3Property1: 'value',
       ComponentLevel3Property2: 253,
@@ -101,13 +108,17 @@ export function run(mapper: JsTsMapper) {
         }
       ]
     };
-    let out = mapper.deserialize(test_entity, ComponentVariant1);  
+    let out = mapper.deserialize(test_entity, ComponentVariant1);
     let out2 = mapper.deserialize(test_entity, ComponentVariant2);
-    
-    //проверка на дублирование свойств при повторной десериализации  
+
+    //проверка на дублирование свойств при повторной десериализации
     let out3 = mapper.deserialize(test_entity, ComponentVariant1);
     let prototype = Object.getPrototypeOf(Object.getPrototypeOf(out3));
-    let availableFields:Array<FieldProperty> = Reflect.getMetadata(AvailableFieldsMetadataKey, prototype, Reflect.get(prototype.constructor, HashPropertyKey)) as [FieldProperty];
+    let availableFields: Array<FieldProperty> = Reflect.getMetadata(
+      AvailableFieldsMetadataKey,
+      prototype,
+      Reflect.get(prototype.constructor, HashPropertyKey)
+    ) as [FieldProperty];
     expect(availableFields.length === 5).toBeTruthy();
 
     expect(out instanceof ComponentVariant1).toBeTruthy();

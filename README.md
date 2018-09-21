@@ -130,7 +130,7 @@ console.log(deserializedClient);
 */
 ```
 
-By default all undecorated properties (which don't have a decorator `@JsonProperty()`) pass through the serialization.
+By default all undecorated properties (which don't have a decorator `@JsonProperty()`) pass through the serialization/deserialization.
 Decorator `@SerializeOnlyDecorated` can corrects this case and switch on the ignoring such properties.
 
 ```typescript
