@@ -4,9 +4,8 @@
     "description": "Mapping json object to Typescript class",
     "main": "js-ts-mapper.js",
     "scripts": {
-        "compile:es2015": "npx webpack --es2015 --mode=production",
-        "compile:es5": "npx webpack --es5 --mode=production",
-        "compile": "npm run compile:es2015 && npm run compile:es5 && npx rimraf dist/src",
+        "compile:dev": "npx webpack --mode=development --devtool cheap-module-eval-source-map && npx rimraf dist/src",
+        "compile": "npx webpack --mode=production && npx rimraf dist/src",
         "test": "npx rimraf coverage && npx karma start",
         "test:watch": "npx rimraf coverage && npx karma start --watch=true --singleRun=false",
         "clean": "npx rimraf dist",
@@ -43,7 +42,7 @@
     "dependencies": {
         "reflect-metadata": "^0.1.12"
     },
-    "module": "js-ts-mapper.es5.js",
+    "module": "js-ts-mapper.js",
     "es2015": "js-ts-mapper.js",
     "typings": "index.d.ts",
     "devDependencies": {

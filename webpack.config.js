@@ -1,22 +1,7 @@
 const path = require('path');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const { TSDeclerationsPlugin } = require('ts-loader-decleration');
-
-let plugins = [];
-let postfixTsConfig = 'es2015';
 let fileName = 'js-ts-mapper.js';
-
-const commandArgs = process.argv;
-if (~commandArgs.indexOf('--es5')) {
-    postfixTsConfig = 'es5';
-    fileName = 'js-ts-mapper.es5.js';
-} else {
-    plugins.push(
-        new TSDeclerationsPlugin({
-            out: './index.d.ts'
-        })
-    );
-}
 
 module.exports = {
     entry: './src/index.ts',
@@ -32,7 +17,7 @@ module.exports = {
         extensions: ['.ts', '.js'],
         plugins: [
             new TsconfigPathsPlugin({
-                configFile: `tsconfig-${postfixTsConfig}.json`
+                configFile: `tsconfig-es2015.json`
             })
         ]
     },
@@ -42,5 +27,9 @@ module.exports = {
         library: 'js-ts-mapper',
         libraryTarget: 'umd'
     },
-    plugins: plugins
+    plugins: [
+        new TSDeclerationsPlugin({
+            out: './index.d.ts'
+        })
+    ]
 };
