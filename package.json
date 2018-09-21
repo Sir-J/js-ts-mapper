@@ -13,7 +13,7 @@
         "add:changelog": "git add --force CHANGELOG.md package.json",
         "commit:changelog": "git commit -m \"Updated CHANGELOG.md\"",
         "push:changelog": "git push",
-        "preversion": "npm run clean && npm run compile",
+        "preversion": "npm run clean && npm run compile && npm run test",
         "version": "npx conventional-changelog -p angular -i CHANGELOG.md -s -r && npm run copy:assets && npm run add:changelog && npm run commit:changelog",
         "postversion": "npm run push:changelog && npm publish dist"
     },
