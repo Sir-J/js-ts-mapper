@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { ServerNameMetadataKey, AvailableFieldsMetadataKey, IgnoreUndecoratedPropertyKey } from './config';
+import { ServerNameMetadataKey, AvailableFieldsMetadataKey, IgnoreUndecoratedPropertyKey, HashPropertyKey } from './config';
 import { JsTsCustomConvert, BaseJsTsCustomConvert } from './interface';
 import { FieldProperty } from './field-property';
 
@@ -13,18 +13,29 @@ export function JsonProperty(name?: string, customConverter?:  { new (): BaseJsT
         /**
          * Сохраняем в метаданных переданный name, либо название самого свойства, если параметр не задан
          */
-        Reflect.defineMetadata(ServerNameMetadataKey, name || propertyKey, target, propertyKey);
+        Reflect.defineMetadata(ServerNameMetadataKey, name || propertyKey, target, propertyKey);  
+        
+        /**
+         * Создаем уникальный ключ для конструктора при помощи структуры Symbol
+         * У класса, родителя, прародителя (и т. д.) они будут разными и уникальными, 
+         * чтобы в дальнейшем можно было распутать цепочку прототипов и извлечь метаданные каждого из них в отдельности.
+         */
+        if (!target.constructor.hasOwnProperty(HashPropertyKey)) {
+            Reflect.defineProperty(target.constructor, HashPropertyKey, { value: Symbol(target.constructor.name) });            
+        }
+        // получаем ключ конструктора
+        let hash = getHash(target.constructor);
         /**
          * Проверяем, не определены ли уже availableFields другим экземпляром декоратора
          */
-        let availableFields = Reflect.getMetadata(AvailableFieldsMetadataKey, target, `$$${target.constructor.name}`);
+        let availableFields = Reflect.getMetadata(AvailableFieldsMetadataKey, target, hash);
         if (!availableFields) {
             availableFields = [];
 
             /**
              * Не передаем 4-й параметр(propertyKey) в defineMetadata, т.к. метаданные общие для всех полей
              */
-            Reflect.defineMetadata(AvailableFieldsMetadataKey, availableFields, target, `$$${target.constructor.name}`);
+            Reflect.defineMetadata(AvailableFieldsMetadataKey, availableFields, target, hash);
         }
         /**
          * Регистрируем текущее поле в метаданных
@@ -70,4 +81,11 @@ export function SerializeOnlyDecorated() {
         */
         Reflect.defineMetadata(IgnoreUndecoratedPropertyKey, true, target);
     };
+}
+
+/**
+* Извлекает значение уникального свойства типа по ключу { HashPropertyKey }
+*/
+export function getHash(entity: any) {
+    return Reflect.get(entity, HashPropertyKey);
 }

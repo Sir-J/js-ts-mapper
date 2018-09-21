@@ -1,5 +1,6 @@
 import { AvailableFieldsMetadataKey, ServerNameMetadataKey, IgnoreUndecoratedPropertyKey } from './config';
 import { FieldProperty } from './field-property';
+import { getHash } from './decorators';
 
 const ignoreUndecoratedPropertyDefault = false;
 /**
@@ -18,7 +19,11 @@ export class JsTsMapper {
         }
 
         const target = Object.getPrototypeOf(obj);
-        const availableNames = Reflect.getMetadata(AvailableFieldsMetadataKey, target, `$$${target.constructor.name}`) as [FieldProperty];
+        let hash = getHash(target.constructor);
+        let availableNames: Array<FieldProperty> = Reflect.getMetadata(AvailableFieldsMetadataKey, target, hash) as [FieldProperty];
+        if (availableNames instanceof Array) {
+            availableNames = availableNames.slice();
+        }
         let ignoreUndecoratedProp = Reflect.getMetadata(IgnoreUndecoratedPropertyKey, target.constructor);
         if (typeof ignoreUndecoratedProp !== 'boolean') {
             ignoreUndecoratedProp = ignoreUndecoratedPropertyDefault;
@@ -45,8 +50,9 @@ export class JsTsMapper {
             if (obj.hasOwnProperty(field.name)) {
                 const clientVal = obj[field.name];
                 let serverVal;
-                const propType = Reflect.getMetadata('design:type', target, field.name);
-                const propTypeServerFields = Reflect.getMetadata(AvailableFieldsMetadataKey, propType.prototype, `$$${propType.name}`) as [
+                const propType = Reflect.getMetadata('design:type', target, field.name);                
+                let hash = getHash(propType.prototype.constructor);
+                const propTypeServerFields = Reflect.getMetadata(AvailableFieldsMetadataKey, propType.prototype, hash) as [
                     FieldProperty
                 ];
 
@@ -108,7 +114,12 @@ export class JsTsMapper {
         /**
          * Получаем из метаданных, какие декорированные свойства есть в классе
          */
-        const availableNames = Reflect.getMetadata(AvailableFieldsMetadataKey, target, `$$${target.constructor.name}`) as [FieldProperty];
+        let hash = getHash(target.constructor);
+        let availableNames: Array<FieldProperty> = Reflect.getMetadata(AvailableFieldsMetadataKey, target, hash) as [FieldProperty];
+        if (availableNames instanceof Array) {
+            availableNames = availableNames.slice();
+        }
+
         if (!availableNames) {
             return clientObj;
         }
@@ -145,7 +156,9 @@ export class JsTsMapper {
                 /**
                  * Смотрим, есть ли в метаданных класса информация о свойствах
                  */
-                const propTypeServerFields = Reflect.getMetadata(AvailableFieldsMetadataKey, propType.prototype, `$$${propType.name}`) as [
+                                
+                let hash = getHash(propType.prototype.constructor);
+                const propTypeServerFields = Reflect.getMetadata(AvailableFieldsMetadataKey, propType.prototype, hash) as [
                     FieldProperty
                 ];
                 if (propTypeServerFields) {
@@ -214,9 +227,13 @@ function setAvailableFieldsMetadata(target: any, dest: Array<any> = []) {
     if (!proto) {
         return dest;
     }
-    while (proto.constructor && proto.constructor.name !== 'Object') {
+    while (proto.constructor && proto.constructor.name !== 'Object') {    
+        /**
+         * Извлекаем ключ конструктора у каждого из прототипов он уникален
+         */
+        let hash = getHash(proto.constructor);
         dest.push(
-            ...(Reflect.getMetadata(AvailableFieldsMetadataKey, target, `$$${proto.constructor.name}`) as [FieldProperty])
+            ...(Reflect.getMetadata(AvailableFieldsMetadataKey, proto, hash) as [FieldProperty])
         );
         proto = proto.__proto__;
     }
