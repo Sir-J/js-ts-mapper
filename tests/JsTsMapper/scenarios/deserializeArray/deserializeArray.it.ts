@@ -25,14 +25,14 @@ export function run(mapper: JsTsMapper) {
       {
         Id: 125,
         Number: '25125566963',
-        Created: '2015-11-12T00:00:00',
+        Created: '2015-11-11T21:00:00.000Z',
         OwnerId: 1586,
         HasProlong: true
       },
       {
         Id: 2563,
         Number: '8545596585',
-        Created: '2016-11-12T00:00:00',
+        Created: '2016-11-11T21:00:00.000Z',
         OwnerId: 2584,
         HasProlong: false
       }

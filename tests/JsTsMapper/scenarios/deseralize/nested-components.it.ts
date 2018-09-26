@@ -138,55 +138,55 @@ export function run(mapper: JsTsMapper) {
         {
           componentArrayItemProperty1: 'value',
           componentArrayItemProperty2: 256,
-          componentArrayItemProperty3: '2018-11-03T21:00:00.000Z',
+          componentArrayItemProperty3:'2018-11-04T21:00:00.000Z',
           componentArrayItemProperty4: { id: 212, name: 'name' }
         },
         {
           componentArrayItemProperty1: 'value',
           componentArrayItemProperty2: 256,
-          componentArrayItemProperty3: '2018-11-03T21:00:00.000Z',
+          componentArrayItemProperty3:'2018-11-04T21:00:00.000Z',
           componentArrayItemProperty4: { id: 212, name: 'name' }
         }
       ],
       componentLevel3Property1: 'value',
       componentLevel3Property2: 253,
-      componentLevel3Property3: '2018-11-03T21:00:00.000Z',
+      componentLevel3Property3:'2018-11-04T21:00:00.000Z',
       componentLevel3Property4: { id: 212, name: 'name' },
       componentArray3: [
         {
           componentArrayItemProperty1: 'value',
           componentArrayItemProperty2: 256,
-          componentArrayItemProperty3: '2018-11-03T21:00:00.000Z',
+          componentArrayItemProperty3:'2018-11-04T21:00:00.000Z',
           componentArrayItemProperty4: { id: 212, name: 'name' }
         },
         {
           componentArrayItemProperty1: 'value',
           componentArrayItemProperty2: 256,
-          componentArrayItemProperty3: '2018-11-03T21:00:00.000Z',
+          componentArrayItemProperty3:'2018-11-04T21:00:00.000Z',
           componentArrayItemProperty4: { id: 212, name: 'name' }
         }
       ],
       componentLevel2Property1: 'value',
       componentLevel2Property2: 253,
-      componentLevel2Property3: '2018-11-03T21:00:00.000Z',
+      componentLevel2Property3:'2018-11-04T21:00:00.000Z',
       componentLevel2Property4: { id: 212, name: 'name' },
       componentArray2: [
         {
           componentArrayItemProperty1: 'value',
           componentArrayItemProperty2: 256,
-          componentArrayItemProperty3: '2018-11-03T21:00:00.000Z',
+          componentArrayItemProperty3:'2018-11-04T21:00:00.000Z',
           componentArrayItemProperty4: { id: 212, name: 'name' }
         },
         {
           componentArrayItemProperty1: 'value',
           componentArrayItemProperty2: 256,
-          componentArrayItemProperty3: '2018-11-03T21:00:00.000Z',
+          componentArrayItemProperty3:'2018-11-04T21:00:00.000Z',
           componentArrayItemProperty4: { id: 212, name: 'name' }
         }
       ],
       componentLevel1Property1: 'value',
       componentLevel1Property2: 253,
-      componentLevel1Property3: '2018-11-03T21:00:00.000Z',
+      componentLevel1Property3:'2018-11-04T21:00:00.000Z',
       componentLevel1Property4: { id: 212, name: 'name' }
     };
 

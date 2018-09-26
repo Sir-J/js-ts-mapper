@@ -4,25 +4,30 @@ import { UtilTestTools } from '../../../services/utils.srv';
 
 export function run(mapper: JsTsMapper) {
   it('deserialize object with Array', () => {
+
+    const d1 = new Date(2018, 11, 4);
+    const d2 = new Date(2018, 11, 11);
+    const d3 = new Date(2018, 11, 21);
+
     let test_entity = {
       gender: 1,
       card: false,
       selected: true,
       id: 5,
       name: 'Test',
-      dateBirth: '2018-11-04T21:00:00.000Z',
+      dateBirth: d1.toISOString(),
       bankAccount: [
         {
           id: 125,
           number: '25125566963',
-          created: '2015-11-11T21:00:00.000Z',
+          created: d2.toISOString(),
           ownerId: 1586,
           hasProlong: true
         },
         {
           id: 2563,
           number: '8545596585',
-          created: '2016-11-11T21:00:00.000Z',
+          created: d3.toISOString(),
           ownerId: 2584,
           hasProlong: false
         }
@@ -33,21 +38,21 @@ export function run(mapper: JsTsMapper) {
       Id: 5,
       Name: 'Test',
       Gender: 1,
-      DateBirth: '2018-11-05T00:00:00',
+      DateBirth: d1,
       Card: false,
       selected: true,
       BankAccount: [
         {
           Id: 125,
           Number: '25125566963',
-          Created: '2015-11-12T00:00:00',
+          Created: d2,
           OwnerId: 1586,
           HasProlong: true
         },
         {
           Id: 2563,
           Number: '8545596585',
-          Created: '2016-11-12T00:00:00',
+          Created: d3,
           OwnerId: 2584,
           HasProlong: false
         }
