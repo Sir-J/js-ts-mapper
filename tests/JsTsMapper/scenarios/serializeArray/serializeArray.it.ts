@@ -49,5 +49,6 @@ export function run(mapper: JsTsMapper) {
     expect(mapper.serializeArray(null)).toBe(null);
     expect(mapper.serializeArray(undefined)).toBe(undefined);
     UtilTestTools.expectEqual(mapper.serializeArray(test_entity), result);
+    UtilTestTools.expectEqual(mapper.serialize(test_entity), result);
   });
 }

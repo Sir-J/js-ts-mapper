@@ -1,4 +1,4 @@
-import { JsTsMapper } from 'ts-mapper';
+import { JsTsMapper } from "../../../../src";
 import { UtilTestTools } from '../../../services/utils.srv';
 import { BankAccount } from '../../../models/bank-account';
 
@@ -41,6 +41,9 @@ export function run(mapper: JsTsMapper) {
     let out: Array<BankAccount> = mapper.deserializeArray(result, BankAccount);
 
     UtilTestTools.expectEqual(out,test_entity);
+    let out2: Array<BankAccount> = mapper.deserialize(result, BankAccount);
+
+    UtilTestTools.expectEqual(out2,test_entity);
     expect(out instanceof Array).toBeTruthy();
     expect(out[0] instanceof BankAccount).toBeTruthy();
     expect(out[0].created instanceof Date).toBeTruthy();

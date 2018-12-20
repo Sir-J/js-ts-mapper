@@ -6,6 +6,7 @@ const ignoreUndecoratedPropertyDefault = false;
 /**
  * Класс реализующий маппинг
  */
+
 export class JsTsMapper {
     /**
      * Маппинг класса на объект
@@ -16,6 +17,10 @@ export class JsTsMapper {
 
         if (isPrimitive(obj)) {
             return <T>obj;
+        }
+
+        if (obj instanceof Array) {
+            return this.serializeArray(obj);
         }
 
         const target = Object.getPrototypeOf(obj);
@@ -55,7 +60,7 @@ export class JsTsMapper {
             if (obj.hasOwnProperty(field.name)) {
                 const clientVal = obj[field.name];
                 let serverVal;
-                const propType = Reflect.getMetadata('design:type', target, field.name);                
+                const propType = Reflect.getMetadata('design:type', target, field.name);
                 let hash = getHash(propType.prototype.constructor);
                 const propTypeServerFields = Reflect.getMetadata(AvailableFieldsMetadataKey, propType.prototype, hash) as [
                     FieldProperty
@@ -105,16 +110,20 @@ export class JsTsMapper {
      * @param obj Объект, который необходимо с маппить на класс
      * @param type Тип класса, который будет заполнен значениями оз объекта
      */
-    deserialize<T>(obj: Object, type: { new (...args): T }): T {
+    deserialize<T>(obj: Object, type: { new (...args: any[]): T }): any {
         if (isPrimitive(obj)) {
             return <T>obj;
+        }
+
+        if (obj instanceof Array) {
+            return this.deserializeArray<T>(obj, type);
         }
 
         /**
          * Создаем объект, с помощью конструктора, переданного в параметре type
          */
         const clientObj: T = new type();
-        
+
         /**
          * Получаем контейнер с метаданными
          */
@@ -144,7 +153,7 @@ export class JsTsMapper {
         if (!availableNames) {
             return clientObj;
         }
-        
+
         /**
          * Вытаскиваем правила всех родительских объектов
          */
@@ -177,7 +186,6 @@ export class JsTsMapper {
                 /**
                  * Смотрим, есть ли в метаданных класса информация о свойствах
                  */
-                                
                 let hash = getHash(propType.prototype.constructor);
                 const propTypeServerFields = Reflect.getMetadata(AvailableFieldsMetadataKey, propType.prototype, hash) as [
                     FieldProperty
@@ -255,7 +263,7 @@ function setAvailableFieldsMetadata(target: any, dest: Array<any> = []) {
     if (!proto) {
         return dest;
     }
-    while (proto.constructor && proto.constructor.name !== 'Object') {    
+    while (proto.constructor && proto.constructor.name !== 'Object') {
         /**
          * Извлекаем ключ конструктора у каждого из прототипов он уникален
          */

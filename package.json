@@ -26,7 +26,8 @@
         "Json toTypescript",
         "Json to class"
     ],
-    "contributors": [{
+    "contributors": [
+        {
             "name": "Sergey Rogachev"
         },
         {
