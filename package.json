@@ -1,6 +1,6 @@
 {
     "name": "js-ts-mapper",
-    "version": "1.0.1",
+    "version": "1.0.2-beta",
     "description": "Mapping json object to Typescript class",
     "main": "js-ts-mapper.js",
     "scripts": {
@@ -10,6 +10,7 @@
         "test:watch": "npx rimraf coverage && npx karma start --watch=true --singleRun=false",
         "clean": "npx rimraf dist",
         "copy:assets": "npx cpy -- package.json README.md CHANGELOG.md dist",
+        "conventional-changelog": "conventional-changelog",
         "add:changelog": "git add --force CHANGELOG.md package.json",
         "commit:changelog": "git commit -m \"Updated CHANGELOG.md\"",
         "push:changelog": "git push",
@@ -41,6 +42,7 @@
     },
     "homepage": "https://github.com/LCGroupIT/issues#readme",
     "dependencies": {
+        "conventional-changelog-cli": "^2.0.11",
         "reflect-metadata": "^0.1.12"
     },
     "module": "js-ts-mapper.js",
