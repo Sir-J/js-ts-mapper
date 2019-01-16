@@ -1,3 +1,13 @@
+## 1.0.3 (2019-01-16)
+
+
+### Bug Fixes
+
+* Date tests ([9f63b97](https://github.com/LCGroupIT/js-ts-mapper/commit/9f63b97))
+* serialize, deserialize arrays ([b4b6896](https://github.com/LCGroupIT/js-ts-mapper/commit/b4b6896))
+
+
+
 ## 1.0.2-beta (2018-12-20)
 
 
