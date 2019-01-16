@@ -1,6 +1,6 @@
 {
     "name": "js-ts-mapper",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "description": "Mapping json object to Typescript class",
     "main": "js-ts-mapper.js",
     "scripts": {
@@ -42,7 +42,6 @@
     },
     "homepage": "https://github.com/LCGroupIT/issues#readme",
     "dependencies": {
-        "conventional-changelog-cli": "^2.0.11",
         "reflect-metadata": "^0.1.12"
     },
     "module": "js-ts-mapper.js",
@@ -52,6 +51,7 @@
         "@types/jasmine": "^2.8.8",
         "@types/webpack": "^4.4.11",
         "@types/webpack-env": "^1.13.6",
+        "conventional-changelog-cli": "^2.0.11",
         "cpy-cli": "^2.0.0",
         "es6-shim": "^0.35.3",
         "istanbul-instrumenter-loader": "^3.0.1",
