@@ -7,6 +7,9 @@ export class AdminUser {
     _middleName: string;
 
     constructor(o) {
+        if (!o) {
+            return;
+        }
         this.id = o.id;
         this._firstName = o.firstName;
         this._middleName = o.middleName;
@@ -19,5 +22,13 @@ export class AdminUser {
     @JsonProperty('FullName')
     get fullName(): string {
         return `${this._lastName} ${this._firstName} ${this._middleName}`;
+    }
+
+    @JsonProperty('FullName')
+    set fullName(value: string) {
+        const names = value.split(' ');
+        this._firstName = names[0];
+        this._lastName = names[1];
+        this._middleName = names[2];
     }
 }
