@@ -57,37 +57,33 @@ export class JsTsMapper {
             if (!serverName) {
                 return;
             }
-            if (obj.hasOwnProperty(field.name)) {
-                const clientVal = obj[field.name];
-                let serverVal;
-                const propType = Reflect.getMetadata('design:type', target, field.name);
-                let hash = getHash(propType.prototype.constructor);
-                const propTypeServerFields = Reflect.getMetadata(AvailableFieldsMetadataKey, propType.prototype, hash) as [
-                    FieldProperty
-                ];
+            const clientVal = obj[field.name];
+            let serverVal;
+            const propType = Reflect.getMetadata('design:type', target, field.name);
+            let hash = getHash(propType.prototype.constructor);
+            const propTypeServerFields = Reflect.getMetadata(AvailableFieldsMetadataKey, propType.prototype, hash) as [FieldProperty];
 
-                if (clientVal instanceof Array) {
-                    serverVal = this.serializeArray<T>(clientVal);
-                    serverObj[serverName] = serverVal;
+            if (clientVal instanceof Array) {
+                serverVal = this.serializeArray<T>(clientVal);
+                serverObj[serverName] = serverVal;
+            } else {
+                if (clientVal && propTypeServerFields) {
+                    serverVal = this.serialize<T>(clientVal);
                 } else {
-                    if (clientVal && propTypeServerFields) {
-                        serverVal = this.serialize<T>(clientVal);
-                    } else {
-                        serverVal = clientVal;
-                    }
+                    serverVal = clientVal;
+                }
 
-                    if (field.converter) {
-                        serverObj[serverName] = field.converter.serialize(serverVal);
-                    } else {
-                        serverObj[serverName] = serverVal;
-                    }
+                if (field.converter) {
+                    serverObj[serverName] = field.converter.serialize(serverVal);
+                } else {
+                    serverObj[serverName] = serverVal;
                 }
-                /** 
-                 * Вычищаем из выходного объекта обработанные поля
-                 */
-                if (field.name !== serverName && ignoreUndecoratedProp === false) {
-                    delete serverObj[field.name];
-                }
+            }
+            /**
+             * Вычищаем из выходного объекта обработанные поля
+             */
+            if (field.name !== serverName && ignoreUndecoratedProp === false) {
+                delete serverObj[field.name];
             }
         });
 
@@ -159,7 +155,7 @@ export class JsTsMapper {
          */
         setAvailableFieldsMetadata(target, availableNames);
 
-         /**
+        /**
          * Обрабатываем каждое свойство
          */
         availableNames.forEach((field: FieldProperty) => {
@@ -187,9 +183,7 @@ export class JsTsMapper {
                  * Смотрим, есть ли в метаданных класса информация о свойствах
                  */
                 let hash = getHash(propType.prototype.constructor);
-                const propTypeServerFields = Reflect.getMetadata(AvailableFieldsMetadataKey, propType.prototype, hash) as [
-                    FieldProperty
-                ];
+                const propTypeServerFields = Reflect.getMetadata(AvailableFieldsMetadataKey, propType.prototype, hash) as [FieldProperty];
                 if (propTypeServerFields) {
                     /**
                      * Да, класс использует наш декоратор, обрабатываем свойство рекурсивно
@@ -210,7 +204,7 @@ export class JsTsMapper {
                  */
             }
 
-            /** 
+            /**
              * Вычищаем из выходного объекта обработанные поля
              */
             if (field.name !== serverName && ignoreUndecoratedProp === false) {
@@ -255,10 +249,10 @@ function isPrimitive(value: any) {
  * @param dest Массив, куда будут помещены доступные свойства.
  * @returns {Array}
  */
-function setAvailableFieldsMetadata(target: any, dest: Array<any> = []) { 
+function setAvailableFieldsMetadata(target: any, dest: Array<any> = []) {
     if (!target) {
         return dest;
-    }   
+    }
     let proto = target.__proto__;
     if (!proto) {
         return dest;
@@ -268,9 +262,7 @@ function setAvailableFieldsMetadata(target: any, dest: Array<any> = []) {
          * Извлекаем ключ конструктора у каждого из прототипов он уникален
          */
         let hash = getHash(proto.constructor);
-        dest.push(
-            ...(Reflect.getMetadata(AvailableFieldsMetadataKey, proto, hash) as [FieldProperty])
-        );
+        dest.push(...(Reflect.getMetadata(AvailableFieldsMetadataKey, proto, hash) as [FieldProperty]));
         proto = proto.__proto__;
     }
     return dest;
