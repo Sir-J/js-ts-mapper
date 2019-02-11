@@ -1,3 +1,7 @@
+# [1.1.0-beta](https://github.com/LCGroupIT/js-ts-mapper/compare/v1.0.4...v1.1.0-beta) (2019-02-11)
+
+
+
 ## 1.0.4 (2019-01-16)
 
 
