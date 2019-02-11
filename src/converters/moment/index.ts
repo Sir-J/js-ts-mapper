@@ -1,5 +1,6 @@
 import * as moment from 'moment/moment';
-import { JsTsCustomConvert } from 'src/interface';
+
+import { JsTsCustomConvert } from '../../interface';
 
 export class DateConverter implements JsTsCustomConvert<Date> {
     serialize(date: Date): any {

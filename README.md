@@ -184,6 +184,7 @@ Converters included in build
 
 ### Date converters
 
+- DateConverter
 - DateTimeOffsetConverter
 - DateTimeOffsetConverterWithTimeZone
 - DateTimeOffsetConverterWithoutTimeZone
