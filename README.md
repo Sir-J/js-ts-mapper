@@ -178,3 +178,35 @@ let out = mapper.serialize(test_entity);
 */
 
 ```
+
+# Converters
+Converters included in build 
+
+### Date converters
+
+- DateTimeOffsetConverter
+- DateTimeOffsetConverterWithTimeZone
+- DateTimeOffsetConverterWithoutTimeZone
+
+To use date converters you must imported the "moment" library.
+
+```bash
+npm install moment --save
+```
+
+#### Example of using
+
+```typescript
+import { JsonProperty } from 'js-ts-mapper';
+import { DateConverter } from 'js-ts-mapper/converters';
+import * as moment from 'moment';
+
+export class Example {    
+    @JsonProperty('dateBirth', DateConverter)
+    dateBirth: Date;
+}
+```
+
+### Common converters
+
+- StringToArray
