@@ -63,22 +63,40 @@ export class JsTsMapper {
             let hash = getHash(propType.prototype.constructor);
             const propTypeServerFields = Reflect.getMetadata(AvailableFieldsMetadataKey, propType.prototype, hash) as [FieldProperty];
 
-            if (clientVal instanceof Array) {
-                serverVal = this.serializeArray<T>(clientVal);
-                serverObj[serverName] = serverVal;
-            } else {
-                if (clientVal && propTypeServerFields) {
-                    serverVal = this.serialize<T>(clientVal);
-                } else {
-                    serverVal = clientVal;
-                }
+            // if (clientVal instanceof Array) {
+            //     serverVal = this.serializeArray<T>(clientVal);
+            //     serverObj[serverName] = serverVal;
+            // } else {
+            //     if (clientVal && propTypeServerFields) {
+            //         serverVal = this.serialize<T>(clientVal);
+            //     } else {
+            //         serverVal = clientVal;
+            //     }
 
-                if (field.converter) {
-                    serverObj[serverName] = field.converter.serialize(serverVal);
+            //     if (field.converter) {
+            //         serverObj[serverName] = field.converter.serialize(serverVal);
+            //     } else {
+            //         serverObj[serverName] = serverVal;
+            //     }
+            // }
+
+            if (clientVal && propTypeServerFields) {
+                serverVal = this.serialize<T>(clientVal);
+            } else {
+                serverVal = clientVal;
+            }
+
+            if (field.converter) {
+                serverObj[serverName] = field.converter.serialize(serverVal);
+            } else {
+                if (clientVal instanceof Array) {
+                    serverVal = this.serializeArray<T>(clientVal);
+                    serverObj[serverName] = serverVal;
                 } else {
                     serverObj[serverName] = serverVal;
                 }
             }
+
             /**
              * Вычищаем из выходного объекта обработанные поля
              */
@@ -176,32 +194,57 @@ export class JsTsMapper {
              * Получаем конструктор класса
              */
             const propType = Reflect.getMetadata('design:type', target, field.name);
-            if (propType === Array) {
-                clientVal = this.deserializeArray(serverVal, field);
+            // if (propType === Array) {
+            //     clientVal = this.deserializeArray(serverVal, field);
+            // } else {
+            //     /**
+            //      * Смотрим, есть ли в метаданных класса информация о свойствах
+            //      */
+            //     let hash = getHash(propType.prototype.constructor);
+            //     const propTypeServerFields = Reflect.getMetadata(AvailableFieldsMetadataKey, propType.prototype, hash) as [FieldProperty];
+            //     if (propTypeServerFields) {
+            //         /**
+            //          * Да, класс использует наш декоратор, обрабатываем свойство рекурсивно
+            //          */
+            //         clientVal = this.deserialize(serverVal, propType);
+            //     } else {
+            //         /**
+            //          * Проверяем, есть ли кастомный конвертер, если есть, то преобразовываем значение
+            //          */
+            //         if (field.converter) {
+            //             clientVal = field.converter.deserialize(serverVal);
+            //         } else {
+            //             clientVal = serverVal;
+            //         }
+            //     }
+            //     /**
+            //      * Записываем результирующее значение
+            //      */
+            // }            
+
+            /**
+             * Смотрим, есть ли в метаданных класса информация о свойствах
+             */
+            let hash = getHash(propType.prototype.constructor);
+            const propTypeServerFields = Reflect.getMetadata(AvailableFieldsMetadataKey, propType.prototype, hash) as [FieldProperty];
+            if (propTypeServerFields) {
+                /**
+                 * Да, класс использует наш декоратор, обрабатываем свойство рекурсивно
+                 */
+                clientVal = this.deserialize(serverVal, propType);
             } else {
                 /**
-                 * Смотрим, есть ли в метаданных класса информация о свойствах
+                 * Проверяем, есть ли кастомный конвертер, если есть, то преобразовываем значение
                  */
-                let hash = getHash(propType.prototype.constructor);
-                const propTypeServerFields = Reflect.getMetadata(AvailableFieldsMetadataKey, propType.prototype, hash) as [FieldProperty];
-                if (propTypeServerFields) {
-                    /**
-                     * Да, класс использует наш декоратор, обрабатываем свойство рекурсивно
-                     */
-                    clientVal = this.deserialize(serverVal, propType);
+                if (field.converter) {
+                    clientVal = field.converter.deserialize(serverVal);
                 } else {
-                    /**
-                     * Проверяем, есть ли кастомный конвертер, если есть, то преобразовываем значение
-                     */
-                    if (field.converter) {
-                        clientVal = field.converter.deserialize(serverVal);
+                    if (propType === Array) {
+                        clientVal = this.deserializeArray(serverVal, field);
                     } else {
                         clientVal = serverVal;
-                    }
+                    }                    
                 }
-                /**
-                 * Записываем результирующее значение
-                 */
             }
 
             /**
