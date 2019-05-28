@@ -20,6 +20,7 @@ export class AdminUser {
     id: number;
 
     @JsonProperty('FullName')
+    // @ts-ignore
     set fullName(value: string) {
         const names = value.split(' ');
         this._firstName = names[0];
@@ -27,6 +28,7 @@ export class AdminUser {
         this._middleName = names[2];
     }
 
+    // @ts-ignore
     get fullName(): string {
         return `${this._lastName} ${this._firstName} ${this._middleName}`;
     }

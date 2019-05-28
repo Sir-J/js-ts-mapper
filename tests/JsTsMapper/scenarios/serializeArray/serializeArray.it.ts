@@ -17,14 +17,16 @@ export function run(mapper: JsTsMapper) {
         number: '25125566963',
         created: d1,
         ownerId: 1586,
-        hasProlong: true
+        hasProlong: true,
+        params:[{ name: 'param1', value: 1 }, { name: 'param2', value: 2 }]
       }),
       new BankAccount({
         id: 2563,
         number: '8545596585',
         created: d2,
         ownerId: 2584,
-        hasProlong: false
+        hasProlong: false,
+        params:[{ name: 'param1', value: 1 }, { name: 'param2', value: 2 }]
       })
     ];
 
@@ -34,14 +36,22 @@ export function run(mapper: JsTsMapper) {
         Number: '25125566963',
         Created: moment.utc(d1).format(SERIALIZE_FORMAT),
         OwnerId: 1586,
-        HasProlong: true
+        HasProlong: true,
+        Params: {
+          param1: 1,
+          param2: 2
+        }
       },
       {
         Id: 2563,
         Number: '8545596585',
         Created: moment.utc(d2).format(SERIALIZE_FORMAT),
         OwnerId: 2584,
-        HasProlong: false
+        HasProlong: false,
+        Params: {
+          param1: 1,
+          param2: 2
+        }
       }
     ];
     UtilTestTools.expectEqual(mapper.serializeArray([]), []);
