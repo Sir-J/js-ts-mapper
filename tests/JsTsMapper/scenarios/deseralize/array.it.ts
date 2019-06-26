@@ -1,6 +1,7 @@
 import { JsTsMapper } from 'ts-mapper';
 import { ClientComponent } from '../../../models/client-component';
 import { UtilTestTools } from '../../../services/utils.srv';
+import {BankAccount} from "../../../models";
 
 export function run(mapper: JsTsMapper) {
   it('deserialize object with Array', () => {
@@ -61,6 +62,7 @@ export function run(mapper: JsTsMapper) {
     const out: ClientComponent = mapper.deserialize(result, ClientComponent);
     expect(out instanceof ClientComponent).toBeTruthy();
     expect(out.dateBirth instanceof Date).toBeTruthy();
+    expect(out.bankAccount[0] instanceof BankAccount).toBeTruthy();
     expect(out.bankAccount[0].created instanceof Date).toBeTruthy();
     expect(out.bankAccount[1].created instanceof Date).toBeTruthy();
     UtilTestTools.expectEqual(out, test_entity);
