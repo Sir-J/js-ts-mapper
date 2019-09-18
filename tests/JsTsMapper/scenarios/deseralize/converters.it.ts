@@ -16,7 +16,7 @@ export function run(mapper: JsTsMapper) {
       Id: 5,
       Name: 'Test',
       Gender: 1,
-      DateBirth: '2018-11-05T00:00:00',
+      DateBirth: '2018-11-04T21:00:00.000',
       Card: false
     };
     let out = mapper.deserialize(result, ClientComponent);

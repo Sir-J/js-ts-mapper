@@ -5,20 +5,22 @@ import { Gender } from '../../../models/gender';
 
 export function run(mapper: JsTsMapper) {
   it('deserialize component with inner component', () => {
+    const date: Date = new Date(2019, 11, 21);
+
     let test_entity = {
       gender: Gender.Female,
       card: false,
+      Address: { value: 'Пресненская набережная, 10' },
       id: 5,
       name: 'Test',
-      dateBirth: '2018-11-04T21:00:00.000Z',
-      Address: { value: 'Пресненская набережная, 10' }
+      dateBirth: date.toISOString()
     };
 
     let result = {
       Id: 5,
       Name: 'Test',
       Gender: Gender.Female,
-      DateBirth: '2018-11-05T00:00:00',
+      DateBirth: date,
       Card: false,
       Address: {
         Value: 'Пресненская набережная, 10'

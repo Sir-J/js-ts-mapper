@@ -130,3 +130,84 @@ console.log(deserializedClient);
 */
 ```
 
+By default all undecorated properties (which don't have a decorator `@JsonProperty()`) pass through the serialization/deserialization.
+Decorator `@SerializeOnlyDecorated` can corrects this case and switch on the ignoring such properties.
+
+```typescript
+
+import { SerializeUndecorated, JsonProperty, JsTsMapper } from "js-ts-mapper";
+
+@SerializeOnlyDecorated()
+export class Employeer {
+    constructor(o) {
+        Object.assign(this, o);
+    }
+
+    @JsonProperty('Id')
+    id: number;
+
+    @JsonProperty('FirstName')
+    firstName: string;
+
+    @JsonProperty('LastName')
+    lastName: string;
+
+    @JsonProperty('MiddleName')
+    middleName: string;
+
+    selected: boolean = true;
+}
+
+let test_entity = new Employeer({
+    id: 256,
+    firstName: 'Test',
+    lastName: 'Test',
+    middleName: 'Test',
+    selected: true
+});
+
+let out = mapper.serialize(test_entity);    
+/*
+    returns
+    {
+        Id: 256,
+        FirstName: 'Test',
+        LastName: 'Test',
+        MiddleName: 'Test'
+    }
+*/
+
+```
+
+# Converters
+Converters included in build 
+
+### Date converters
+
+- DateConverter
+- DateTimeOffsetConverter
+- DateTimeOffsetConverterWithTimeZone
+- DateTimeOffsetConverterWithoutTimeZone
+
+To use date converters you must imported the "moment" library.
+
+```bash
+npm install moment --save
+```
+
+#### Example of using
+
+```typescript
+import { JsonProperty } from 'js-ts-mapper';
+import { DateConverter } from 'js-ts-mapper/converters';
+import * as moment from 'moment';
+
+export class Example {    
+    @JsonProperty('dateBirth', DateConverter)
+    dateBirth: Date;
+}
+```
+
+### Common converters
+
+- StringToArray
